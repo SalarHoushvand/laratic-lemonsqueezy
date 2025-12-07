@@ -1,0 +1,113 @@
+/* EasyMDE (Markdown editor) styles */
+
+/* Limit EasyMDE (Markdown editor) height and enable scrolling */
+.EasyMDEContainer .CodeMirror {
+    height: auto;
+    min-height: 20rem;
+}
+
+.EasyMDEContainer .CodeMirror-scroll {
+    max-height: 20rem;
+    min-height: 20rem;
+    overflow: auto;
+}
+
+/* EasyMDE fullscreen layering */
+.EasyMDEContainer .CodeMirror-fullscreen {
+    z-index: 999 !important;
+}
+
+.EasyMDEContainer .editor-toolbar.fullscreen {
+    z-index: 999;
+}
+
+.EasyMDEContainer .editor-preview-side.editor-preview-active-side {
+    z-index: 999;
+}
+
+/* EasyMDE dark mode support (style aligned with text-area dark styles) */
+.dark .EasyMDEContainer .editor-toolbar,
+.dark .EasyMDEContainer .editor-statusbar {
+    background-color: var(--color-surface-dark);
+    color: var(--color-on-surface-dark);
+    border-color: var(--color-outline-dark);
+}
+
+.EasyMDEContainer .editor-toolbar,
+.EasyMDEContainer .editor-statusbar {
+    background-color: var(--color-surface-alt);
+
+}
+
+.dark .EasyMDEContainer .editor-toolbar a {
+    color: var(--color-on-surface-dark);
+    /* Icons in EasyMDE toolbar are dark by default; lightly invert for dark UI */
+    filter: invert(0.85);
+}
+
+.dark .EasyMDEContainer .editor-toolbar a:hover,
+.dark .EasyMDEContainer .editor-toolbar a.active {
+    background-color: var(--color-surface-dark);
+}
+
+/* Support button elements too */
+.dark .EasyMDEContainer .editor-toolbar button:hover,
+.dark .EasyMDEContainer .editor-toolbar button.active {
+    background-color: var(--color-surface-dark);
+}
+
+.dark .EasyMDEContainer .editor-toolbar i.separator {
+    border-color: var(--color-outline-dark);
+}
+
+.dark .EasyMDEContainer .CodeMirror {
+    background-color: var(--color-surface-dark-alt);
+    color: var(--color-on-surface-dark);
+    border-color: var(--color-outline-dark);
+}
+
+
+
+/* Focus outline to match textarea focus-visible styling */
+.dark .EasyMDEContainer .CodeMirror.CodeMirror-focused {
+    outline: 2px solid var(--color-primary-dark);
+    outline-offset: 2px;
+}
+
+/* Cursor and selection */
+.dark .EasyMDEContainer .CodeMirror-cursor {
+    border-left: 2px solid var(--color-on-surface-dark-strong);
+}
+
+.dark .EasyMDEContainer .CodeMirror-selected {
+    background-color: color-mix(in srgb, var(--color-primary-dark) 25%, transparent);
+}
+
+/* Placeholder text */
+.dark .EasyMDEContainer .CodeMirror pre.CodeMirror-placeholder {
+    color: color-mix(in srgb, var(--color-on-surface-dark) 55%, transparent);
+}
+
+/* Gutter/line numbers if enabled */
+.dark .EasyMDEContainer .CodeMirror-gutters {
+    background-color: var(--color-surface-dark-alt);
+    border-color: var(--color-outline-dark);
+    color: var(--color-on-surface-dark);
+}
+
+/* Preview panes */
+.dark .EasyMDEContainer .editor-preview,
+.dark .EasyMDEContainer .editor-preview-side {
+    background-color: var(--color-surface-dark);
+    color: var(--color-on-surface-dark);
+}
+
+.dark .EasyMDEContainer .editor-preview code,
+.dark .EasyMDEContainer .editor-preview pre,
+.dark .EasyMDEContainer .editor-preview-side code,
+.dark .EasyMDEContainer .editor-preview-side pre {
+    background-color: var(--color-surface-dark-alt);
+    color: var(--color-on-surface-dark);
+}
+
+
