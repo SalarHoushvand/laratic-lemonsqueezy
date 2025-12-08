@@ -81,7 +81,7 @@ class ExtractTranslations extends Command
         // Merge new keys into existing translations
         foreach ($keys as $key) {
             if (! array_key_exists($key, $existing)) {
-                $existing[$key] = $key; // default value = key itself
+                $existing[$key] = null; // default value = null to mark as untranslated
             }
         }
 
