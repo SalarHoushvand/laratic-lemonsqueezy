@@ -2,6 +2,7 @@
     'user' => null,
     'size' => 'md', // sm | md | lg
     'isLink' => true,
+    'hasAvatar' => true,
 ])
 
 @php
@@ -31,24 +32,31 @@
 
 @if ($isLink)
     <a class="flex items-center {{ $sizeConfig['gap'] }} w-max" href="{{ route('admin.users.show', $user) }}">
-        <x-avatar :img="$user->avatar" :fallback="$user->initials() ?? 'Unknown'" size="{{ $sizeConfig['avatar'] }}" variant="primary" />
+        @if ($hasAvatar)
+            <x-avatar :img="$user->avatar" :fallback="$user->initials() ?? 'Unknown'" size="{{ $sizeConfig['avatar'] }}" variant="primary" />
+        @endif
         <div class="flex flex-col">
             <span class="text-on-surface dark:text-on-surface-dark {{ $sizeConfig['name'] }}">
                 {{ $user->name ?? 'Unknown' }}
             </span>
-            <span class="text-on-surface-muted dark:text-on-surface-dark-muted {{ $sizeConfig['email'] }} max-w-32 text-ellipsis overflow-hidden">
+            <span
+                class="text-on-surface-muted dark:text-on-surface-dark-muted {{ $sizeConfig['email'] }} max-w-32 text-ellipsis overflow-hidden">
                 {{ $user->email ?? 'Unknown' }}
             </span>
         </div>
     </a>
 @else
     <div class="flex items-center {{ $sizeConfig['gap'] }} w-max">
-        <x-avatar :img="$user->avatar" :fallback="$user->initials() ?? 'Unknown'" size="{{ $sizeConfig['avatar'] }}" variant="primary" />
+        @if ($hasAvatar)
+            <x-avatar :img="$user->avatar" :fallback="$user->initials() ?? 'Unknown'" size="{{ $sizeConfig['avatar'] }}" variant="primary" />
+        @endif
         <div class="flex flex-col">
-            <span class="text-on-surface dark:text-on-surface-dark {{ $sizeConfig['name'] }} text-ellipsis overflow-hidden">
+            <span
+                class="text-on-surface dark:text-on-surface-dark {{ $sizeConfig['name'] }} text-ellipsis overflow-hidden">
                 {{ $user->name ?? 'Unknown' }}
             </span>
-            <span class="text-on-surface-muted dark:text-on-surface-dark-muted {{ $sizeConfig['email'] }} text-ellipsis overflow-hidden max-w-32">
+            <span
+                class="text-on-surface-muted dark:text-on-surface-dark-muted {{ $sizeConfig['email'] }} text-ellipsis overflow-hidden max-w-32">
                 {{ $user->email ?? 'Unknown' }}
             </span>
         </div>

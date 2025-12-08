@@ -22,5 +22,6 @@ class Plan extends Model
         'features' => 'array',
         'price_ids' => 'array',
         'price' => 'integer',
+        'is_featured' => 'boolean',
     ];
 }

@@ -61,7 +61,8 @@
                     <!-- Checkout Actions -->
                     <div class="flex flex-col gap-2">
                         <x-lemon-button :href="$checkout"
-                            class="rounded-radius flex items-center gap-2 justify-center bg-primary px-4 py-2 text-center text-on-primary dark:bg-primary-dark dark:text-on-primary-dark">
+                            class="rounded-radius flex items-center gap-2 justify-center bg-primary px-4 py-2 text-center text-on-primary dark:bg-primary-dark dark:text-on-primary-dark"
+                            dark>
                             {{ __('Secure Checkout') }}
                         </x-lemon-button>
 
@@ -78,9 +79,9 @@
                         </p>
                     </div>
 
-                    <p class="text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-                        {{ __($product->description) }}
-                    </p>
+                    <div class="mt-1 text-sm text-on-surface/80 dark:text-on-surface-dark/80 prose prose-sm dark:prose-invert max-w-none">
+                        {!! $product->description !!}
+                    </div>
 
                     <!-- Features List -->
                     @if ($product->features)

@@ -12,12 +12,20 @@
 <article
     class="panel group flex justify-between gap-4 rounded-radius text-on-surface dark:text-on-surface-dark w-full xl:max-w-lg min-h-24 {{ $isFeatured ? 'bg-primary/10 dark:bg-primary-dark/10' : '' }}">
     <!-- Thumbnail -->
-    <div class="shrink-0 my-auto">
-        <div class="size-20 overflow-hidden rounded-lg">
-            <img src="{{ $img }}" class="h-full w-full object-cover"
-                alt="{{ __('Image of :product', ['product' => $name]) }}" />
+    @if ($img)
+        <div class="shrink-0 my-auto">
+            <div class="size-20 overflow-hidden rounded-lg">
+                <img src="{{ $img }}" class="h-full w-full object-cover"
+                    alt="{{ __('Image of :product', ['product' => $name]) }}" />
+            </div>
         </div>
-    </div>
+    @else
+        <div class="shrink-0 my-auto">
+            <div class="size-20 overflow-hidden flex items-center justify-center rounded-lg bg-surface-dark/5 p-2 text-on-surface dark:bg-surface/10 dark:text-on-surface-dark">
+                <x-icons.shopping-bag variant="solid" size="lg" />
+            </div>
+        </div>
+    @endif
 
     <!-- Title + Description -->
     <div class="min-w-0 flex-1">
@@ -25,9 +33,9 @@
             aria-describedby="productDescription">
             {{ $name }}
         </h3>
-        <p id="productDescription" class="mt-1 line-clamp-2 text-sm text-on-surface/80 dark:text-on-surface-dark/80">
-            {{ $description }}
-        </p>
+        <div id="productDescription" class="mt-1 line-clamp-2 text-sm text-on-surface/80 dark:text-on-surface-dark/80 prose prose-sm dark:prose-invert max-w-none">
+            {!! $description !!}
+        </div>
     </div>
 
     <!-- Price + CTA -->

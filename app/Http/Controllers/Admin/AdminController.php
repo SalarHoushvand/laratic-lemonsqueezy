@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Laravel\LemonSqueezy\Transaction;
+use LemonSqueezy\Laravel\Order;
 
 class AdminController extends Controller
 {
     private const CENTS_TO_DOLLARS = 100;
-
-    private const DEFAULT_TIMEZONE = 'America/New_York';
 
     private const DATE_RANGES = [
         'today' => 'Today',
@@ -81,19 +77,18 @@ class AdminController extends Controller
      */
     private function getMetrics(Carbon $startDate, Carbon $endDate, Carbon $previousStartDate, Request $request): array
     {
-        $timezone = $this->getTimezone($request);
-
         // Get revenue for all three periods in parallel queries
-        $revenueQuery = Transaction::query()
+        $revenueQuery = Order::query()
             ->selectRaw('
-                SUM(CASE WHEN billed_at >= ? AND billed_at < ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as current_revenue,
-                SUM(CASE WHEN billed_at >= ? AND billed_at < ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as previous_revenue,
-                SUM(CASE WHEN billed_at >= ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as ytd_revenue
+                SUM(CASE WHEN ordered_at >= ? AND ordered_at <= ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as current_revenue,
+                SUM(CASE WHEN ordered_at >= ? AND ordered_at < ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as previous_revenue,
+                SUM(CASE WHEN ordered_at >= ? THEN CAST(total AS DECIMAL(10,2)) ELSE 0 END) as ytd_revenue
             ', [
                 $startDate, $endDate,
                 $previousStartDate, $startDate,
-                Carbon::now($timezone)->startOfYear(),
-            ]);
+                Carbon::now()->startOfYear(),
+            ])
+            ->where('status', 'paid');
 
         $revenueResults = $revenueQuery->first();
 
@@ -103,7 +98,7 @@ class AdminController extends Controller
 
         // Get subscription counts for current and previous periods
         // Use DB::table to avoid model eager loading
-        $subscriptionCounts = DB::table('subscriptions')
+        $subscriptionCounts = DB::table('lemon_squeezy_subscriptions')
             ->selectRaw('
                 COUNT(CASE WHEN created_at >= ? AND created_at <= ? THEN 1 END) as new_subscriptions,
                 COUNT(CASE WHEN created_at >= ? AND created_at < ? THEN 1 END) as previous_subscriptions,
@@ -112,17 +107,18 @@ class AdminController extends Controller
             ', [
                 $startDate, $endDate,
                 $previousStartDate, $startDate,
-                'canceled', $startDate, $endDate,
-                'canceled', $previousStartDate, $startDate,
+                'cancelled', $startDate, $endDate,
+                'cancelled', $previousStartDate, $startDate,
             ])
             ->first();
 
         // Get order counts for current and previous periods
         $orderCounts = Order::query()
-            ->where('status', '!=', 'incomplete')
+            ->where('status', '!=', 'pending')
+            ->where('status', '!=', 'failed')
             ->selectRaw('
-                COUNT(CASE WHEN created_at >= ? AND created_at <= ? THEN 1 END) as new_orders,
-                COUNT(CASE WHEN created_at >= ? AND created_at < ? THEN 1 END) as previous_orders
+                COUNT(CASE WHEN ordered_at >= ? AND ordered_at <= ? THEN 1 END) as new_orders,
+                COUNT(CASE WHEN ordered_at >= ? AND ordered_at < ? THEN 1 END) as previous_orders
             ', [
                 $startDate, $endDate,
                 $previousStartDate, $startDate,
@@ -183,54 +179,53 @@ class AdminController extends Controller
      */
     private function getDateRangeDates(string $range, Request $request): array
     {
-        $timezone = $this->getTimezone($request);
-        $endDate = Carbon::now($timezone)->endOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
         $dates = match ($range) {
             'today' => [
-                Carbon::now($timezone)->startOfDay(),
+                Carbon::now()->startOfDay(),
                 $endDate,
-                Carbon::now($timezone)->subDay()->startOfDay(),
+                Carbon::now()->subDay()->startOfDay(),
             ],
             'yesterday' => [
-                Carbon::now($timezone)->subDay()->startOfDay(),
-                Carbon::now($timezone)->subDay()->endOfDay(),
-                Carbon::now($timezone)->subDays(2)->startOfDay(),
+                Carbon::now()->subDay()->startOfDay(),
+                Carbon::now()->subDay()->endOfDay(),
+                Carbon::now()->subDays(2)->startOfDay(),
             ],
             'last_7_days' => [
-                Carbon::now($timezone)->subDays(6)->startOfDay(),
+                Carbon::now()->subDays(6)->startOfDay(),
                 $endDate,
-                Carbon::now($timezone)->subDays(13)->startOfDay(),
+                Carbon::now()->subDays(13)->startOfDay(),
             ],
             'last_10_days' => [
-                Carbon::now($timezone)->subDays(9)->startOfDay(),
+                Carbon::now()->subDays(9)->startOfDay(),
                 $endDate,
-                Carbon::now($timezone)->subDays(19)->startOfDay(),
+                Carbon::now()->subDays(19)->startOfDay(),
             ],
             'last_30_days' => [
-                Carbon::now($timezone)->subDays(29)->startOfDay(),
+                Carbon::now()->subDays(29)->startOfDay(),
                 $endDate,
-                Carbon::now($timezone)->subDays(59)->startOfDay(),
+                Carbon::now()->subDays(59)->startOfDay(),
             ],
             'last_3_months' => [
-                Carbon::now($timezone)->subMonths(2)->startOfMonth(),
+                Carbon::now()->subMonths(2)->startOfMonth(),
                 $endDate,
-                Carbon::now($timezone)->subMonths(5)->startOfMonth(),
+                Carbon::now()->subMonths(5)->startOfMonth(),
             ],
             'last_6_months' => [
-                Carbon::now($timezone)->subMonths(5)->startOfMonth(),
+                Carbon::now()->subMonths(5)->startOfMonth(),
                 $endDate,
-                Carbon::now($timezone)->subMonths(11)->startOfMonth(),
+                Carbon::now()->subMonths(11)->startOfMonth(),
             ],
             'ytd' => [
-                Carbon::now($timezone)->startOfYear(),
+                Carbon::now()->startOfYear(),
                 $endDate,
-                Carbon::now($timezone)->subYear()->startOfYear(),
+                Carbon::now()->subYear()->startOfYear(),
             ],
             default => [
-                Carbon::now($timezone)->subDays(29)->startOfDay(),
+                Carbon::now()->subDays(29)->startOfDay(),
                 $endDate,
-                Carbon::now($timezone)->subDays(59)->startOfDay(),
+                Carbon::now()->subDays(59)->startOfDay(),
             ],
         };
 
@@ -286,15 +281,13 @@ class AdminController extends Controller
      */
     private function getChartMonthsForRange(string $range, Request $request): int
     {
-        $timezone = $this->getTimezone($request);
-
         return match ($range) {
             'today', 'yesterday' => 1,
             'last_7_days', 'last_10_days' => 1,
             'last_30_days' => 2,
             'last_3_months' => 3,
             'last_6_months' => 6,
-            'ytd' => Carbon::now($timezone)->month,
+            'ytd' => Carbon::now()->month,
             default => 6,
         };
     }
@@ -349,7 +342,7 @@ class AdminController extends Controller
      */
     private function getDailyRevenue(Carbon $startDate, Carbon $endDate): array
     {
-        $dateFormat = $this->getDateFormatExpression('billed_at', 'Y-m-d');
+        $dateFormat = $this->getDateFormatExpression('ordered_at', 'Y-m-d');
 
         // Generate all dates in range
         $dateKeys = [];
@@ -363,11 +356,11 @@ class AdminController extends Controller
         }
 
         // Fetch revenue data
-        $rawData = DB::table('transactions')
+        $rawData = DB::table('lemon_squeezy_orders')
             ->selectRaw("{$dateFormat} as date, SUM(CAST(total AS DECIMAL(10,2))) as total")
-            ->where('billed_at', '>=', $startDate)
-            ->where('billed_at', '<=', $endDate)
-            ->where('status', 'completed')
+            ->where('ordered_at', '>=', $startDate)
+            ->where('ordered_at', '<=', $endDate)
+            ->where('status', 'paid')
             ->groupBy(DB::raw($dateFormat))
             ->get()
             ->keyBy('date');
@@ -389,20 +382,19 @@ class AdminController extends Controller
      */
     private function getMonthlyRevenue(int $numberOfMonths, ?Carbon $startDate, Request $request): array
     {
-        $timezone = $this->getTimezone($request);
         $start = $startDate
             ? $startDate->copy()->startOfMonth()
-            : Carbon::now($timezone)->startOfMonth()->subMonths($numberOfMonths - 1);
+            : Carbon::now()->startOfMonth()->subMonths($numberOfMonths - 1);
 
         [$monthKeys, $months] = $this->generateMonthData($numberOfMonths, $start);
 
-        $dateFormat = $this->getDateFormatExpression('billed_at');
+        $dateFormat = $this->getDateFormatExpression('ordered_at');
 
         // Fetch revenue data using database-agnostic date formatting
-        $rawData = DB::table('transactions')
+        $rawData = DB::table('lemon_squeezy_orders')
             ->selectRaw("{$dateFormat} as month, SUM(CAST(total AS DECIMAL(10,2))) as total")
-            ->where('billed_at', '>=', $start)
-            ->where('status', 'completed')
+            ->where('ordered_at', '>=', $start)
+            ->where('status', 'paid')
             ->groupBy(DB::raw($dateFormat))
             ->get()
             ->keyBy('month');
@@ -426,8 +418,6 @@ class AdminController extends Controller
      */
     private function getDailyTotalSubscriptionsOptimized(Carbon $startDate, Carbon $endDate, Request $request): array
     {
-        $timezone = $this->getTimezone($request);
-
         // Generate all dates in range
         $dateKeys = [];
         $currentDate = $startDate->copy();
@@ -439,20 +429,20 @@ class AdminController extends Controller
 
         // Get all relevant subscriptions in a single query
         // Use DB::table to avoid model eager loading
-        $subscriptions = DB::table('subscriptions')
+        $subscriptions = DB::table('lemon_squeezy_subscriptions')
             ->select(['created_at', 'ends_at'])
             ->where('created_at', '<=', $endDate)
             ->where('status', 'active')
             ->get();
 
         // Calculate counts for each date in memory
-        return collect($dateKeys)->map(function ($dateKey) use ($subscriptions, $timezone) {
-            $date = Carbon::createFromFormat('Y-m-d', $dateKey, $timezone)->endOfDay();
+        return collect($dateKeys)->map(function ($dateKey) use ($subscriptions) {
+            $date = Carbon::createFromFormat('Y-m-d', $dateKey)->endOfDay();
 
-            return $subscriptions->filter(function ($subscription) use ($date, $timezone) {
-                // Convert string dates to Carbon for comparison (parse as UTC, then convert to user timezone)
-                $createdAt = Carbon::parse($subscription->created_at, 'UTC')->setTimezone($timezone);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at, 'UTC')->setTimezone($timezone) : null;
+            return $subscriptions->filter(function ($subscription) use ($date) {
+                // Parse dates as UTC (database stores in UTC)
+                $createdAt = Carbon::parse($subscription->created_at);
+                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
                 // Subscription was created before or on this date
                 $createdBeforeDate = $createdAt <= $date;
@@ -474,32 +464,31 @@ class AdminController extends Controller
      */
     private function getMonthlyTotalSubscriptionsOptimized(int $numberOfMonths, ?Carbon $startDate, Request $request): array
     {
-        $timezone = $this->getTimezone($request);
         $start = $startDate
             ? $startDate->copy()->startOfMonth()
-            : Carbon::now($timezone)->startOfMonth()->subMonths($numberOfMonths - 1);
+            : Carbon::now()->startOfMonth()->subMonths($numberOfMonths - 1);
 
         [$monthKeys] = $this->generateMonthData($numberOfMonths, $start);
 
         // Calculate the last month end date
-        $lastMonthEnd = Carbon::createFromFormat('Y-m', end($monthKeys), $timezone)->endOfMonth();
+        $lastMonthEnd = Carbon::createFromFormat('Y-m', end($monthKeys))->endOfMonth();
 
         // Get all relevant subscriptions in a single query
         // Use DB::table to avoid model eager loading
-        $subscriptions = DB::table('subscriptions')
+        $subscriptions = DB::table('lemon_squeezy_subscriptions')
             ->select(['created_at', 'ends_at'])
             ->where('created_at', '<=', $lastMonthEnd)
             ->where('status', 'active')
             ->get();
 
         // Calculate counts for each month in memory
-        return collect($monthKeys)->map(function ($monthKey) use ($subscriptions, $timezone) {
-            $monthEnd = Carbon::createFromFormat('Y-m', $monthKey, $timezone)->endOfMonth();
+        return collect($monthKeys)->map(function ($monthKey) use ($subscriptions) {
+            $monthEnd = Carbon::createFromFormat('Y-m', $monthKey)->endOfMonth();
 
-            return $subscriptions->filter(function ($subscription) use ($monthEnd, $timezone) {
-                // Convert string dates to Carbon for comparison (parse as UTC, then convert to user timezone)
-                $createdAt = Carbon::parse($subscription->created_at, 'UTC')->setTimezone($timezone);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at, 'UTC')->setTimezone($timezone) : null;
+            return $subscriptions->filter(function ($subscription) use ($monthEnd) {
+                // Parse dates as UTC (database stores in UTC)
+                $createdAt = Carbon::parse($subscription->created_at);
+                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
                 // Subscription was created before or at end of this month
                 $createdBeforeMonth = $createdAt <= $monthEnd;
@@ -512,13 +501,4 @@ class AdminController extends Controller
         })->values()->toArray();
     }
 
-    /**
-     * Get timezone from authenticated user or fallback to default.
-     */
-    private function getTimezone(Request $request): string
-    {
-        $user = $request->user() ?? Auth::user();
-
-        return $user?->timezone ?? self::DEFAULT_TIMEZONE;
-    }
 }

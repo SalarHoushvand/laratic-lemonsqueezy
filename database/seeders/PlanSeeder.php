@@ -29,7 +29,9 @@ class PlanSeeder extends Seeder
 
             Plan::create([
                 'name' => $data['name'],
-                'lemon_squeezy_variant_id' => '1133364',
+                // LemonSqueezy IDs are numeric (e.g., Product: 720299, Variant: 1133661)
+                'lemon_squeezy_product_id' => $data['lemon_squeezy_product_id'] ?? (string) rand(720000, 729999),
+                'lemon_squeezy_variant_id' => $data['lemon_squeezy_variant_id'] ?? (string) rand(1133000, 1133999),
                 'description' => $data['description'],
                 'price' => (int) $data['price'],
                 'currency' => $data['currency'],

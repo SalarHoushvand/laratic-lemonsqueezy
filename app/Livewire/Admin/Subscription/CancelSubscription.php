@@ -3,52 +3,56 @@
 namespace App\Livewire\Admin\Subscription;
 
 use Illuminate\Contracts\View\View;
-use Laravel\Paddle\Subscription;
-use Livewire\Attributes\Validate;
+use LemonSqueezy\Laravel\Subscription;
 use Livewire\Component;
 
 /**
- * Admin component for canceling user subscriptions
+ * Admin component for canceling and resuming user subscriptions
  */
 class CancelSubscription extends Component
 {
     /**
-     * The subscription to be canceled
+     * The subscription to be canceled or resumed
      */
     public Subscription $subscription;
 
     /**
-     * Whether the cancellation confirmation modal is open
-     */
-    public bool $confirmingCancellation = false;
-
-    /**
-     * The cancellation method selected by admin
-     */
-    #[Validate('required|in:immediately,at-end-of-period')]
-    public string $cancel_method = '';
-
-    /**
-     * Cancel the subscription based on selected method
+     * Cancel the subscription at the end of the billing period
      */
     public function cancel(): void
     {
-        $this->validate();
-
-        if ($this->cancel_method === 'immediately') {
-            $this->subscription->cancelNow();
-        } else {
-            if ($this->subscription->onTrial()) {
-                $this->subscription->cancelNow();
-            } else {
-                $this->subscription->cancel();
-            }
-        }
+        $this->subscription->cancel();
 
         session()->flash('notification', [
             'variant' => 'success',
             'title' => __('Subscription Cancelled'),
-            'message' => __('The subscription has been cancelled successfully.'),
+            'message' => __('The subscription will be cancelled at the end of the current billing period.'),
+        ]);
+
+        $this->redirect(route('admin.users.show', $this->subscription->billable_id, absolute: false), navigate: true);
+    }
+
+    /**
+     * Resume a cancelled subscription
+     */
+    public function resume(): void
+    {
+        if ($this->subscription->expired()) {
+            session()->flash('notification', [
+                'variant' => 'danger',
+                'title' => __('Cannot Resume'),
+                'message' => __('Cannot resume an expired subscription.'),
+            ]);
+
+            return;
+        }
+
+        $this->subscription->resume();
+
+        session()->flash('notification', [
+            'variant' => 'success',
+            'title' => __('Subscription Resumed'),
+            'message' => __('The subscription has been resumed successfully.'),
         ]);
 
         $this->redirect(route('admin.users.show', $this->subscription->billable_id, absolute: false), navigate: true);

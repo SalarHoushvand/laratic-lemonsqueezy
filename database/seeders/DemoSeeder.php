@@ -18,7 +18,6 @@ class DemoSeeder extends Seeder
      * - Good AI usage (10-30 per user)
      * - Active subscriptions (~35% of users)
      * - Multiple orders (~25% of users, 1-5 orders each)
-     * - Corresponding transactions
      *
      * Perfect for demonstrations and showcasing features.
      */
@@ -59,10 +58,6 @@ class DemoSeeder extends Seeder
             'percentageOfUsers' => 0.25,
             'minOrders' => 1,
             'maxOrders' => 5,
-        ]);
-
-        $this->call([
-            TransactionSeeder::class,
         ]);
 
         $this->command->info('✅ DEMO seeding completed!');

@@ -32,7 +32,9 @@ class ProductSeeder extends Seeder
                 'description' => $data['description'],
                 'price' => (int) $data['price'],
                 'currency' => $data['currency'],
-                'lemon_squeezy_variant_id' => '1132128',
+                // LemonSqueezy IDs are numeric (e.g., Product: 720299, Variant: 1133661)
+                'lemon_squeezy_product_id' => $data['lemon_squeezy_product_id'] ?? (string) rand(720000, 729999),
+                'lemon_squeezy_variant_id' => $data['lemon_squeezy_variant_id'] ?? (string) rand(1133000, 1133999),
                 'img_url' => $data['img_url'],
                 'status' => $data['status'],
                 'features' => json_decode($data['features'], true),

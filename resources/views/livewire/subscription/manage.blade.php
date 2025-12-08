@@ -27,10 +27,16 @@
                     </div>
 
                     <div class="space-y-1 text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-                        @if ($userSubscription->onGracePeriod())
+                        @if ($userSubscription->cancelled())
                             <p>
-                                <span class="text-on-surface dark:text-on-surface-dark">{{ __('Ends on:') }}</span>
-                                <span class="font-medium">{{ $userSubscription->ends_at->format('M d, Y') }}</span>
+                                <span class="text-on-surface dark:text-on-surface-dark">
+                                    @if ($userSubscription->expired())
+                                        {{ __('Expired on:') }}
+                                    @else
+                                        {{ __('Will be cancelled on:') }}
+                                    @endif
+                                </span>
+                                <span class="font-medium">{{ $userSubscription->ends_at?->format('M d, Y') ?? 'N/A' }}</span>
                             </p>
                         @endif
 
@@ -42,7 +48,7 @@
                             </p>
                         @endif
 
-                        @if ($nextPaymentAmount && $nextPaymentCurrency && $nextPaymentDate)
+                        @if (!$userSubscription->onGracePeriod() && $nextPaymentAmount && $nextPaymentCurrency && $nextPaymentDate)
                             <p>
                                 <span class="text-on-surface dark:text-on-surface-dark">{{ __('Next payment:') }}</span>
                                 <span class="font-medium">
@@ -61,7 +67,12 @@
                         {{ __('Update Payment') }}
                     </x-button>
 
-                    @if (!$userSubscription->onGracePeriod())
+                    @if ($userSubscription->onGracePeriod())
+                        <x-button variant="primary" size="sm" wire:click="resumePlan" wire:loading.attr="disabled">
+                            <span wire:loading.remove>{{ __('Resume Subscription') }}</span>
+                            <span wire:loading>{{ __('Resuming...') }}</span>
+                        </x-button>
+                    @elseif (!$userSubscription->cancelled())
                         <x-blocks.plans.cancel-plan>
                             <x-button variant="ghost" size="sm">
                                 {{ __('Cancel Subscription') }}
@@ -157,13 +168,13 @@
                                 </div>
 
                                 <!-- Description -->
-                                <p class="mb-6 text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-                                    {{ __($plan->description) }}
-                                </p>
+                                <div class="mb-6 text-sm prose prose-sm dark:prose-invert text-on-surface-muted dark:text-on-surface-dark-muted">
+                                    {!! $plan->description !!}
+                                </div>
 
                                 <!-- Action Button -->
                                 <div class="mt-auto">
-                                    @if ($isSubscribed && $userSubscription && !$userSubscription->onGracePeriod() && !$userSubscription->onTrial())
+                                    @if ($isSubscribed && $userSubscription && !$userSubscription->cancelled() && !$userSubscription->onTrial() && !$userSubscription->onGracePeriod())
                                         @if ($currentPlan !== $plan->name)
                                             <x-blocks.plans.swap-plan :plan="$plan">
                                                 <x-button class="w-full" :variant="$plan->is_featured ? 'primary' : 'outline'" size="sm">
@@ -184,6 +195,17 @@
                                             <p class="text-xs text-on-surface-muted dark:text-on-surface-dark-muted">
                                                 {{ __('End trial to switch plans') }}
                                             </p>
+                                        @endif
+                                    @elseif ($userSubscription && $userSubscription->onGracePeriod())
+                                        @if ($currentPlan === $plan->name)
+                                            <x-button class="w-full" variant="primary" size="sm" wire:click="resumePlan" wire:loading.attr="disabled">
+                                                <span wire:loading.remove>{{ __('Resume Subscription') }}</span>
+                                                <span wire:loading>{{ __('Resuming...') }}</span>
+                                            </x-button>
+                                        @else
+                                            <x-button class="w-full" variant="outline" size="sm" disabled>
+                                                {{ __('Resume subscription to switch plans') }}
+                                            </x-button>
                                         @endif
                                     @else
                                         <x-button :variant="$plan->is_featured ? 'primary' : 'outline'" :href="route('plans.show', $plan->lemon_squeezy_variant_id)" class="w-full" size="sm">
@@ -246,13 +268,13 @@
                                 </div>
 
                                 <!-- Description -->
-                                <p class="mb-6 text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-                                    {{ __($plan->description) }}
-                                </p>
+                                <div class="mb-6 text-sm prose prose-sm dark:prose-invert text-on-surface-muted dark:text-on-surface-dark-muted">
+                                    {!! $plan->description !!}
+                                </div>
 
                                 <!-- Action Button -->
                                 <div class="mt-auto">
-                                    @if ($isSubscribed && $userSubscription && !$userSubscription->onGracePeriod() && !$userSubscription->onTrial())
+                                    @if ($isSubscribed && $userSubscription && !$userSubscription->cancelled() && !$userSubscription->onTrial() && !$userSubscription->onGracePeriod())
                                         @if ($currentPlan !== $plan->name)
                                             <x-blocks.plans.swap-plan :plan="$plan">
                                                 <x-button class="w-full" :variant="$plan->is_featured ? 'primary' : 'outline'" size="sm">
@@ -273,6 +295,17 @@
                                             <p class="text-xs text-on-surface-muted dark:text-on-surface-dark-muted">
                                                 {{ __('End trial to switch plans') }}
                                             </p>
+                                        @endif
+                                    @elseif ($userSubscription && $userSubscription->onGracePeriod())
+                                        @if ($currentPlan === $plan->name)
+                                            <x-button class="w-full" variant="primary" size="sm" wire:click="resumePlan" wire:loading.attr="disabled">
+                                                <span wire:loading.remove>{{ __('Resume Subscription') }}</span>
+                                                <span wire:loading>{{ __('Resuming...') }}</span>
+                                            </x-button>
+                                        @else
+                                            <x-button class="w-full" variant="outline" size="sm" disabled>
+                                                {{ __('Resume subscription to switch plans') }}
+                                            </x-button>
                                         @endif
                                     @else
                                         <x-button :variant="$plan->is_featured ? 'primary' : 'outline'" :href="route('plans.show', $plan->lemon_squeezy_variant_id)" class="w-full" size="sm">

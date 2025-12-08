@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Models\Plan;
+use App\Models\Product;
+use LemonSqueezy\Laravel\Order;
 use Illuminate\View\View;
-use Laravel\Paddle\Transaction;
 
 class OrderController extends Controller
 {
@@ -20,15 +21,23 @@ class OrderController extends Controller
     }
 
     /**
-     * Display the specified order with its transactions
+     * Display the specified order
      *
      * Authorization is handled by the 'role:admin' middleware at the route level
      */
     public function show(Order $order): View
     {
-        $order->load('product', 'user');
-        $transactions = Transaction::where('invoice_number', $order->invoice_number)->get();
+        $order->load('billable');
 
-        return view('pages.admin.orders.show', compact('order', 'transactions'));
+        $item = null;
+        if ($order->variant_id) {
+            if ($order->product_type === 'subscription') {
+                $item = Plan::where('lemon_squeezy_variant_id', $order->variant_id)->first();
+            } elseif ($order->product_type === 'one-time') {
+                $item = Product::where('lemon_squeezy_variant_id', $order->variant_id)->first();
+            }
+        }
+
+        return view('pages.admin.orders.show', compact('order', 'item'));
     }
 }

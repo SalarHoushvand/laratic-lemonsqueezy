@@ -7,16 +7,28 @@
         @endif
 
 
-        <div class="mb-6 *:w-fit">
-            <x-input-file name="avatar" target="avatar" :componentId="$this->getId()" :errorMessage="$errors->get('avatar')">
-                <div class="group relative inline-block cursor-pointer">
-                    <x-avatar :img="$avatar ?: $user->avatar" :name="$user->name" size="xl"/>
-                    <div
-                        class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                        <x-icons.camera variant="solid" size="lg" class="text-white" />
+        <div class="mb-6">
+            <div class="flex items-center gap-4 w-fit">
+                <x-input-file name="avatar" target="avatar" :componentId="$this->getId()" :errorMessage="$errors->get('avatar')">
+                    <div class="group relative inline-block cursor-pointer">
+                        <x-avatar :img="$avatar ?: $user->avatar" :name="$user->name" size="xl"/>
+                        <div
+                            class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                            <x-icons.camera variant="solid" size="lg" class="text-white" />
+                        </div>
                     </div>
-                </div>
-            </x-input-file>
+                </x-input-file>
+                @if ($avatar || $user->avatar)
+                    <x-button type="button" variant="outline" size="sm" wire:click="removeAvatar"
+                        wire:loading.attr="disabled">
+                        <x-icons.spinner wire:loading wire:target="removeAvatar"
+                            class="size-4 animate-spin fill-on-primary dark:fill-on-primary-dark" />
+                        <span wire:loading.remove>{{ __('Remove Avatar') }}</span>
+                        <span wire:loading wire:target="removeAvatar">{{ __('Removing...') }}</span>
+                    </x-button>
+                @endif
+            </div>
+            <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
         </div>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">

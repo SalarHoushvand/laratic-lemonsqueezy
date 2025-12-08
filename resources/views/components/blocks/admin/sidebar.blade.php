@@ -55,13 +55,6 @@
             </li>
 
             <li>
-                <x-sidebar-link href="{{ route('admin.transactions') }}" :active="request()->routeIs('admin.transactions')">
-                    <x-icons.banknotes variant="outline" />
-                    <span>{{ __('Transactions') }}</span>
-                </x-sidebar-link>
-            </li>
-
-            <li>
                 <x-sidebar-link href="{{ route('admin.ai-usage') }}" :active="request()->routeIs('admin.ai-usage')">
                     <x-icons.sparkles variant="outline" />
                     <span>{{ __('AI Usage') }}</span>
@@ -120,7 +113,7 @@
         <!-- Bottom Navigation -->
         <ul class="flex flex-col gap-2 mt-auto">
             <li>
-                <x-sidebar-link href="https://github.com/laravel/livewire-starter-kit" target="_blank">
+                <x-sidebar-link href="https://github.com" target="_blank">
                     <x-icons.folder-git-2 />
                     <span>{{ __('Repository') }}</span>
                 </x-sidebar-link>

@@ -25,7 +25,6 @@
         @if (auth()->user()->subscribed('default'))
             <x-badge variant="primary" size="xs">
                 {{ auth()->user()->currentPlanName() }}
-                {{-- {{ auth()->user()->subscription()->name }} --}}
             </x-badge>
         @endif
     </div>

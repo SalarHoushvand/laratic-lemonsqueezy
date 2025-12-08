@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('transactions', 'orders');
+        $user->load('orders');
 
         return view('pages.admin.users.show', compact('user'));
     }

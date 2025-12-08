@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('lemon_squeezy_product_id');
             $table->string('lemon_squeezy_variant_id')->unique();
             $table->text('description')->nullable();
             $table->unsignedInteger('price');

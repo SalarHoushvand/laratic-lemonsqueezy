@@ -7,9 +7,13 @@
         <p class="text-sm text-on-surface dark:text-on-surface-dark">
             {{ __('Subscribed to the :plan plan.', ['plan' => $user->currentPlanName()]) }}
         </p>
-        @if ($user->subscription()->onGracePeriod())
+        @if ($user->subscription()->cancelled())
             <p class="text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('On grace period until :date.', ['date' => $user->subscription()->ends_at->format('M d, Y')]) }}
+                @if ($user->subscription()->expired())
+                    {{ __('Subscription expired on :date.', ['date' => $user->subscription()->ends_at?->format('M d, Y') ?? 'N/A']) }}
+                @else
+                    {{ __('Subscription will be cancelled on :date.', ['date' => $user->subscription()->ends_at?->format('M d, Y') ?? 'N/A']) }}
+                @endif
             </p>
         @endif
         @if ($user->subscription()->onTrial())

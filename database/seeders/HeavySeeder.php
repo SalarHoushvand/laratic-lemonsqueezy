@@ -18,7 +18,6 @@ class HeavySeeder extends Seeder
      * - Extensive AI usage (20-50 per user = ~350,000 records)
      * - Many subscriptions (~40% of users = ~4,000)
      * - Many orders (~30% of users, 2-6 orders each = ~12,000 orders)
-     * - Corresponding transactions (~50,000+)
      *
      * WARNING: This will take several minutes to complete and create
      * a large database (~500MB+). Use for performance testing only.
@@ -63,11 +62,6 @@ class HeavySeeder extends Seeder
             'percentageOfUsers' => 0.3,
             'minOrders' => 0,
             'maxOrders' => 2,
-        ]);
-
-        $this->command->info('Creating transactions (this will take a few minutes)...');
-        $this->call([
-            TransactionSeeder::class,
         ]);
 
         $duration = now()->diffForHumans($startTime, true);

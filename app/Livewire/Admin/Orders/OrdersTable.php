@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Admin\Orders;
 
-use App\Models\Order;
 use Illuminate\Contracts\View\View;
+use LemonSqueezy\Laravel\Order;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -39,16 +39,18 @@ class OrdersTable extends Component
      */
     public function render(): View
     {
-        $orders = Order::with(['user', 'transaction', 'product'])
-            ->whereNotIn('status', ['incomplete'])
+        $orders = Order::with('billable')
             ->when($this->search, function ($query, $search) {
                 $trimmedSearch = trim($search);
-                $query->where('invoice_number', 'like', "%{$trimmedSearch}%")
-                    ->orWhereHas('user', function ($query) use ($trimmedSearch) {
-                        $query->where('name', 'like', "%{$trimmedSearch}%");
-                    });
+                $query->where(function ($q) use ($trimmedSearch) {
+                    $q->where('order_number', 'like', "%{$trimmedSearch}%")
+                        ->orWhereHasMorph('billable', ['App\Models\User'], function ($query) use ($trimmedSearch) {
+                            $query->where('name', 'like', "%{$trimmedSearch}%")
+                                ->orWhere('email', 'like', "%{$trimmedSearch}%");
+                        });
+                });
             })
-            ->latest()
+            ->latest('ordered_at')
             ->paginate(8);
 
         return view('livewire.admin.orders.orders-table', [

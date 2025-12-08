@@ -58,7 +58,7 @@
                 </button>
             </div>
 
-            <div class="bg-surface dark:bg-surface-dark/75 py-4">
+            <div class="bg-surface dark:bg-surface-dark/75">
                 {{ $slot }}
             </div>
 

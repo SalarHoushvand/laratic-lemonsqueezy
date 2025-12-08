@@ -182,7 +182,6 @@ class GenerateSitemap extends Command
             str_starts_with($name, 'subscription.') ||
             str_starts_with($name, 'products.') ||
             str_starts_with($name, 'orders.') ||
-            str_starts_with($name, 'transactions.') ||
             str_starts_with($name, 'ai.') ||
             $name === 'dashboard') {
             return true;

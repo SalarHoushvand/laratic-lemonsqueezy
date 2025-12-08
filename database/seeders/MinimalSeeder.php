@@ -18,7 +18,6 @@ class MinimalSeeder extends Seeder
      * - Minimal AI usage (2-5 per user)
      * - Few subscriptions (~20% of users)
      * - Few orders (~15% of users, 1-2 orders each)
-     * - Corresponding transactions
      */
     public function run(): void
     {
@@ -35,17 +34,17 @@ class MinimalSeeder extends Seeder
         ]);
 
         $this->call([
-            ProductSeeder::class,
+            // ProductSeeder::class,
             // PlanSeeder::class,
             TagSeeder::class,
             PostSeeder::class,
         ]);
 
-        $this->command->info('Creating AI usage records...');
-        $this->call(AiUsageSeeder::class, false, [
-            'minRecordsPerUser' => 2,
-            'maxRecordsPerUser' => 5,
-        ]);
+        // $this->command->info('Creating AI usage records...');
+        // $this->call(AiUsageSeeder::class, false, [
+        //     'minRecordsPerUser' => 2,
+        //     'maxRecordsPerUser' => 5,
+        // ]);
 
         // $this->command->info('Creating subscriptions...');
         // $this->call(SubscriptionSeeder::class, false, [
@@ -59,9 +58,7 @@ class MinimalSeeder extends Seeder
         //     'maxOrders' => 2,
         // ]);
 
-        // $this->call([
-        //     TransactionSeeder::class,
-        // ]);
+
 
         $this->command->info('✅ MINIMAL seeding completed!');
     }

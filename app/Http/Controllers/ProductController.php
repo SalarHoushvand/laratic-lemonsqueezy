@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use LemonSqueezy\Laravel\Order as Order;
-use App\Models\User;
 
 class ProductController extends Controller
 {
@@ -14,7 +12,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('status', 'active')
+        $products = Product::where('status', 'published')
             ->orderBy('is_featured', 'desc')
             ->get();
 
@@ -32,12 +30,38 @@ class ProductController extends Controller
         $product = Product::where('lemon_squeezy_variant_id', $lemon_squeezy_variant_id)->firstOrFail();
 
         $checkout = $request->user()->checkout($product->lemon_squeezy_variant_id)
-            ->withBillingAddress($request->user()->country ?? 'US', $request->user()->zip) // Country & Zip Code
+            ->withBillingAddress($this->normalizeCountryCode($request->user()->country ?? 'US'), $request->user()->zip) // Country & Zip Code
+            ->withCustomData(['order_type' => 'one-time'])
             ->redirectTo(route('dashboard'));
 
-        // $checkout = $request->user()->checkout($product->paddle_id)->customData(['order_id' => $order->id])
-        //     ->returnTo(route('orders.pending', $order->id));
-
         return view('pages.products.show', compact('product', 'checkout'));
+    }
+
+      /**
+     * Normalize country code, converting US variations to 'US'
+     *
+     * @param  string|null  $country
+     * @return string
+     */
+    private function normalizeCountryCode(?string $country): string
+    {
+        if (empty($country)) {
+            return 'US';
+        }
+
+        $normalized = strtoupper(str_replace(['.', ' '], '', trim($country)));
+
+        $usVariations = [
+            'UNITEDSTATES',
+            'UNITEDSTATESOFAMERICA',
+            'USA',
+            'US',
+        ];
+
+        if (in_array($normalized, $usVariations, true)) {
+            return 'US';
+        }
+
+        return $country;
     }
 }

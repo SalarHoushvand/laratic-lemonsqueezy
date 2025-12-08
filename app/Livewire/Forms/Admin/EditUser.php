@@ -133,6 +133,22 @@ class EditUser extends Component
     }
 
     /**
+     * Remove the user's avatar.
+     */
+    public function removeAvatar(): void
+    {
+        $this->user->update(['avatar' => null]);
+        $this->avatar = null;
+        $this->user = $this->user->fresh();
+
+        $this->dispatch('notify',
+            variant: 'success',
+            title: __('Avatar removed'),
+            message: __('The avatar has been removed successfully')
+        );
+    }
+
+    /**
      * Refresh the user model when user-updated event is dispatched.
      *
      * This method listens for the 'user-updated' event (dispatched by other

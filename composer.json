@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laratic/laratic-paddle",
+    "name": "laratic/laratic-lemon-squeezy",
     "type": "project",
-    "description": "SaaS starter kit for Laravel and Livewire with Paddle payments.",
+    "description": "SaaS starter kit for Laravel and Livewire with Lemon Squeezy payments.",
     "keywords": [
         "laravel",
         "livewire",
@@ -48,7 +48,6 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/paddle_helpers.php",
             "app/Helpers/ai_helpers.php"
         ]
     },

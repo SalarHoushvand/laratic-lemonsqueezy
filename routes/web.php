@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AiUsageController as AdminAiUsageController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
-use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\Auth\SocialAuthController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\TransactionController;
 use App\Livewire\Admin\FileUpload;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -95,12 +93,6 @@ Route::middleware(['auth', 'two-factor-auth'])->group(function () {
         Route::get('/pending/{order_id}', 'pending')->name('pending');
     });
 
-    // Transaction
-    Route::controller(TransactionController::class)->prefix('transactions')->name('transactions.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/{transaction}/download-invoice', 'downloadInvoice')->name('download-invoice');
-    });
-
     // AI Chat routes
     Route::get('/ai-chat', [AiController::class, 'index'])->name('ai.chat');
     Route::get('/ai-simple', [AiController::class, 'simple'])->name('ai.simple');
@@ -112,7 +104,6 @@ Route::middleware(['auth', 'two-factor-auth'])->group(function () {
         Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
         Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         Route::get('/admin/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
-        Route::get('/admin/transactions', [AdminTransactionController::class, 'index'])->name('admin.transactions');
         Route::get('/admin/ai-usage', [AdminAiUsageController::class, 'index'])->name('admin.ai-usage');
         Route::livewire('/admin/files/upload', FileUpload::class)->name('admin.files.upload');
 

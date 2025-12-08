@@ -55,7 +55,7 @@ class Manage extends Component
     {
         /** @var User $user */
         $this->user = Auth::user();
-        $this->plans = Plan::where('status', 'active')->get();
+        $this->plans = Plan::where('status', 'published')->get();
         $this->currentPlan = $this->user->currentPlanName();
 
         $subscription = $this->user->subscription();
@@ -125,7 +125,7 @@ class Manage extends Component
                 return;
             }
 
-            $subscription->noProrate()->swapAndInvoice($subscription->product_id, $variantId);
+            $subscription->swapAndInvoice($subscription->product_id, $variantId);
 
             session()->flash('notification', [
                 'variant' => 'success',
@@ -147,7 +147,7 @@ class Manage extends Component
     }
 
     /**
-     * Cancel the current subscription
+     * Cancel the current subscription at the end of the billing period
      */
     public function cancelPlan(): void
     {
@@ -165,18 +165,12 @@ class Manage extends Component
                 return;
             }
 
-            if ($subscription->onTrial()) {
-                $subscription->cancelNow();
-                $message = __('Your subscription has been cancelled immediately.');
-            } else {
-                $subscription->cancel();
-                $message = __('Your subscription will be cancelled at the end of the billing period.');
-            }
+            $subscription->cancel();
 
             session()->flash('notification', [
                 'variant' => 'success',
                 'title' => __('Subscription Cancelled'),
-                'message' => $message,
+                'message' => __('The subscription will be cancelled at the end of the current billing period.'),
             ]);
 
             $this->redirect(route('subscription.manage', absolute: false), navigate: true);
@@ -187,6 +181,59 @@ class Manage extends Component
                 title: __('Error'),
                 message: __('Failed to cancel subscription. Please try again.')
             );
+
+            Log::error('Failed to cancel subscription', ['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Resume a cancelled subscription
+     */
+    public function resumePlan(): void
+    {
+        try {
+            $subscription = $this->user->subscription();
+
+            if (! $subscription) {
+                $this->dispatch(
+                    'notify',
+                    variant: 'danger',
+                    title: __('Error'),
+                    message: __('No subscription found.')
+                );
+
+                return;
+            }
+
+            if ($subscription->expired()) {
+                $this->dispatch(
+                    'notify',
+                    variant: 'danger',
+                    title: __('Cannot Resume'),
+                    message: __('Cannot resume an expired subscription.')
+                );
+
+                return;
+            }
+
+            $subscription->resume();
+
+            session()->flash('notification', [
+                'variant' => 'success',
+                'title' => __('Subscription Resumed'),
+                'message' => __('The subscription has been resumed successfully.'),
+            ]);
+
+            $this->redirect(route('subscription.manage', absolute: false), navigate: true);
+        } catch (\Exception $e) {
+            $this->dispatch(
+                'notify',
+                variant: 'danger',
+                title: __('Error'),
+                message: __('Failed to resume subscription. Please try again.')
+            );
+
+            Log::error('Failed to resume subscription', ['error' => $e->getMessage()]);
         }
     }
 
@@ -198,7 +245,11 @@ class Manage extends Component
         $subscription = $this->user->subscription();
 
         if ($subscription) {
-            $subscription->redirectToUpdatePaymentMethod();
+            $paymentMethodUrl = $subscription->updatePaymentMethodUrl();
+
+            if ($paymentMethodUrl) {
+                $this->js("window.open('{$paymentMethodUrl}', '_blank')");
+            }
         }
     }
 }

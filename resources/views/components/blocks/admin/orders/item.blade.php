@@ -1,7 +1,7 @@
 <x-table>
     <x-slot:head>
         <th scope="col" class="p-4">{{ __('Name') }}</th>
-        <th scope="col" class="p-4">{{ __('Paddle ID') }}</th>
+        <th scope="col" class="p-4">{{ __('Variant ID') }}</th>
         <th scope="col" class="p-4">{{ __('Amount') }}</th>
     </x-slot:head>
 
@@ -9,19 +9,19 @@
         <tr>
             <td class="p-4">
                 <div class="flex items-center gap-2">
-                    @if ($order->product->img_url)
+                    @if ($item && isset($item->img_url) && $item->img_url)
                         <img 
-                            alt="{{ __('Image of :product', ['product' => $order->product->name]) }}"
+                            alt="{{ __('Image of :item', ['item' => $item->name]) }}"
                             class="rounded-radius size-10" 
-                            src="{{ $order->product->img_url }}"
+                            src="{{ $item->img_url }}"
                         >
                     @endif
-                    {{ $order->product->name }}
+                    {{ $item?->name ?? __('N/A') }}
                 </div>
             </td>
-            <td class="p-4">{{ $order->product->paddle_id }}</td>
+            <td class="p-4 font-mono">{{ $order->variant_id ?: __('N/A') }}</td>
             <td class="p-4 font-mono">
-                {{ Number::currency($order->product->price / 100, $order->product->currency) }}
+                {{ Number::currency($order->total / 100, $order->currency) }}
             </td>
         </tr>
     </x-slot:body>

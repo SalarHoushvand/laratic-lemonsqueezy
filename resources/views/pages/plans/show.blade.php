@@ -16,11 +16,11 @@
                 </a>
             </div>
         </nav>
- 
+
         <!-- Background Blur Effect -->
         <div class="absolute z-5 -top-20 left-1/2 h-40 w-80 -translate-x-1/2 rounded-full bg-primary opacity-30 blur-[60px] dark:bg-primary-dark"
             aria-hidden="true"></div>
- 
+
         <div>
             <div class="flex flex-col items-center justify-center gap-4 md:min-h-[80svh] pb-10 mt-8">
                 <article
@@ -43,7 +43,8 @@
                                         </small>
                                         @if ($plan->trial_period)
                                             <small class="text-xs font-medium text-primary dark:text-primary-dark">
-                                                {{ $plan->trial_period }} {{ Str::plural($plan->trial_interval, $plan->trial_period) }}
+                                                {{ (int) $plan->trial_interval }}
+                                                {{ Str::plural($plan->trial_period, (int) $plan->trial_interval) }}
                                                 {{ __('free trial') }}
                                             </small>
                                         @endif
@@ -52,46 +53,35 @@
                             </div>
                         </div>
                     </div>
- 
+
                     <!-- Checkout Actions -->
                     <div class="flex flex-col gap-2">
-                        {{-- <x-paddle-button :checkout="$checkout"
-                            class="rounded-radius flex items-center gap-2 justify-center bg-primary px-2.5 py-2 text-center text-on-primary font-semibold dark:bg-primary-dark dark:text-on-primary-dark">
-                            {{ __('Start Your Subscription') }}
-                        </x-paddle-button> --}}
-
                         <x-lemon-button :href="$checkout"
                             class="rounded-radius flex items-center gap-2 justify-center bg-primary px-4 py-2 text-center text-on-primary dark:bg-primary-dark dark:text-on-primary-dark">
                             {{ __('Start Your Subscription') }}
                         </x-lemon-button>
- 
-                        <p class="inline-flex items-center gap-1 text-xs text-on-surface/80 dark:text-on-surface-dark/80">
+
+                        <p
+                            class="inline-flex items-center gap-1 text-xs text-on-surface/80 dark:text-on-surface-dark/80">
                             <x-icons.lock-closed variant="solid" size="xs" />
                             <span>
                                 {{ __('Secure payment powered by') }}
-                                <a class="text-primary dark:text-primary-dark inline" href="https://paddle.com"
+                                <a class="text-primary dark:text-primary-dark inline" href="https://lemonsqueezy.com"
                                     target="_blank" rel="noopener noreferrer">
-                                    Paddle
+                                    Lemon Squeezy
                                 </a>
                             </span>
                         </p>
                     </div>
- 
+
                     <!-- Features List -->
-                    @if ($plan->features)
-                        <div class="flex flex-col gap-1.5 md:gap-2">
-                            @foreach ($plan->features as $feature)
-                                <div class="flex items-center gap-2 text-xs md:text-sm">
-                                    <div
-                                        class="p-0.5 rounded-radius bg-surface-dark/5 text-on-surface dark:bg-surface/10 dark:text-on-surface-dark">
-                                        <x-icons.check variant="micro" size="sm" class="shrink-0" />
-                                    </div>
-                                    <span class="text-on-surface-muted dark:text-on-surface-dark-muted">{{ __($feature) }}</span>
-                                </div>
-                            @endforeach
+                    @if ($plan->description)
+                        <div
+                            class="mt-1 text-sm text-on-surface/80 dark:text-on-surface-dark/80 prose prose-sm dark:prose-invert max-w-none">
+                            {!! $plan->description !!}
                         </div>
                     @endif
- 
+
                     <a class="inline-flex items-center gap-2 text-primary dark:text-primary-dark"
                         href="{{ route('subscription.manage') }}">
                         <x-icons.arrow-left strokeWidth="2" size="sm" />

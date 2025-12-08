@@ -1,7 +1,20 @@
-id,name,paddle_id,description,price,currency,billing_period,status,trial_period,trial_interval,is_featured,features,created_at,updated_at
-1,Starter,pri_01k9w98wx80dhahvg3xv0y05qh,"Get started with all the essentials — simple, fast, and scalable.",2000,USD,month,active,3,day,0,"[""Access to all core features"",""Up to 3 projects or clients"",""Email support within 24 hours"",""Basic analytics dashboard"",""1 team member included""]",2025-11-12 14:59:46,2025-11-12 14:59:46
-2,Pro,pri_01k9w9bstabtc4s4bxenmvn1nk,"For teams who need performance, flexibility, and growth tools.",4900,USD,month,active,NULL,NULL,1,"[""Unlimited projects"",""Priority email and chat support"",""Team collaboration and roles"",""Advanced reporting and insights"",""API access with higher rate limits""]",2025-11-12 15:01:22,2025-11-12 15:02:18
-3,Enterprise,pri_01k9w9d3935q9etr4w2skqtff0,Built for organizations that scale — securely and globally.,9900,USD,month,active,NULL,NULL,0,"[""Dedicated account manager"",""SSO and advanced permissions"",""SLA-backed uptime guarantee"",""Custom integrations and onboarding""]",2025-11-12 15:02:04,2025-11-12 15:02:04
-4,Starter Yearly,pri_01ka98h26yqp9d4xe6pdn1ss38,"Get started with all the essentials — simple, fast, and scalable.",9900,USD,year,active,3,day,0,"[""Access to all core features"",""Up to 3 projects or clients"",""Email support within 24 hours"",""Basic analytics dashboard"",""1 team member included""]",2025-11-17 15:56:55,2025-11-17 15:58:16
-5,Pro Yearly,pri_01ka98nvymja5znk8jenzr58zx,"For teams who need performance, flexibility, and growth tools.",39900,USD,year,active,NULL,NULL,1,"[""Unlimited projects"",""Priority email and chat support"",""Team collaboration and roles"",""Advanced reporting and insights"",""API access with higher rate limits""]",2025-11-17 15:59:31,2025-11-17 15:59:31
-6,Enterprise Yearly,pri_01ka98rhjv39v44x6cknyymz83,Built for organizations that scale — securely and globally.,89900,USD,year,active,NULL,NULL,0,"[""Dedicated account manager"",""SSO and advanced permissions"",""SLA-backed uptime guarantee"",""Custom integrations and onboarding""]",2025-11-17 16:01:00,2025-11-17 16:01:00
+id,name,lemon_squeezy_product_id,lemon_squeezy_variant_id,description,price,currency,billing_period,status,trial_period,trial_interval,is_featured,features,created_at,updated_at
+7,Enterprise,721295,1135286,"<p><strong>Built for organizations that scale — securely and globally.</strong></p>
+
+<ul><li><p>Dedicated account manager</p></li><li><p>SSO and advanced permissions</p></li><li><p>SLA-backed uptime guarantee</p></li><li><p>Custom integrations and onboarding</p></li></ul>",9900,USD,month,published,NULL,NULL,0,NULL,2025-12-08 00:56:08,2025-12-08 00:56:08
+8,Pro,721293,1135284,"<p><strong>For teams who need performance, flexibility, and growth tools.</strong></p>
+
+<ul><li><p>Unlimited projects</p></li><li><p>Priority email and chat support</p></li><li><p>Team collaboration and roles</p></li><li><p>Advanced reporting and insights</p></li><li><p>API access with higher rate limits</p></li></ul>",4900,USD,month,published,NULL,NULL,1,NULL,2025-12-08 00:56:09,2025-12-08 01:04:02
+9,short-test,721445,1135520,,999,USD,day,published,NULL,NULL,0,NULL,2025-12-08 00:56:09,2025-12-08 00:56:09
+10,Starter,721291,1135282,"<p><strong>Get started with all the essentials — simple, fast, and scalable.</strong></p>
+
+<ul><li><p>Access to all core features</p></li><li><p>Up to 3 projects or clients</p></li><li><p>Email support within 24 hours</p></li><li><p>Basic analytics dashboard</p></li><li><p>1 team member included</p></li></ul>",2000,USD,month,published,day,3,0,NULL,2025-12-08 00:56:09,2025-12-08 00:56:09
+11,Pro Yearly,721437,1135505,"<p><strong>For teams who need performance, flexibility, and growth tools.</strong></p>
+
+<ul><li><p>Unlimited projects</p></li><li><p>Priority email and chat support</p></li><li><p>Team collaboration and roles</p></li><li><p>Advanced reporting and insights</p></li><li><p>API access with higher rate limits</p></li></ul>",33900,USD,year,published,NULL,NULL,1,NULL,2025-12-08 00:56:10,2025-12-08 01:04:14
+12,Enterprise Yearly,721562,1135714,"<p><strong>Built for organizations that scale — securely and globally.</strong></p>
+
+<ul><li><p>Dedicated account manager</p></li><li><p>SSO and advanced permissions</p></li><li><p>SLA-backed uptime guarantee</p></li><li><p>Custom integrations and onboarding</p></li></ul>",89900,USD,year,published,NULL,NULL,0,NULL,2025-12-08 01:03:28,2025-12-08 01:03:28
+13,Starter Yearly,721556,1135704,"<p><strong>Get started with all the essentials — simple, fast, and scalable.</strong></p>
+
+<ul><li><p>Access to all core features</p></li><li><p>Up to 3 projects or clients</p></li><li><p>Email support within 24 hours</p></li><li><p>Basic analytics dashboard</p></li><li><p>1 team member included</p></li></ul>",9900,USD,year,published,NULL,NULL,0,NULL,2025-12-08 01:03:31,2025-12-08 01:03:31

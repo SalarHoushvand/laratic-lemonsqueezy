@@ -59,17 +59,7 @@ class UsersTable extends Component
      */
     public function render(): View
     {
-        $users = User::with([
-            'roles',
-            'subscriptions' => function ($query) {
-                $query->where('status', 'active')
-                    ->where(function ($q) {
-                        $q->whereNull('ends_at')
-                            ->orWhere('ends_at', '>', now());
-                    });
-            },
-            'subscriptions.items', // For currentPlanName()
-        ])
+        $users = User::with('roles')
             ->when($this->search, function ($query, $search) {
                 $trimmedSearch = trim($search);
                 $query->where(function ($q) use ($trimmedSearch) {

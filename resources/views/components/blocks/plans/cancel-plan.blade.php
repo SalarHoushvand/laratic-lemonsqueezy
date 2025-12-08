@@ -6,13 +6,7 @@
 
         <div class="space-y-2 p-4">
             <p class="text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __("You're about to cancel your :app subscription.", ['app' => config('app.name')]) }}
-            </p>
-            <p class="text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('By canceling, you will lose access to all premium features at the end of your billing period.') }}
-            </p>
-            <p class="text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('Are you sure you want to proceed with the cancellation?') }}
+                {{ __('The subscription will be cancelled at the end of the current billing period. You can resume it before it expires.') }}
             </p>
         </div>
 

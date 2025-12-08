@@ -35,14 +35,6 @@
 
     </div>
 
-    <!-- Transactions Section -->
-    <div class="mt-12 w-full">
-        <h2 class="heading-5 mb-4 text-on-surface-strong dark:text-on-surface-dark-strong">
-            {{ __('Transactions') }}
-        </h2>
-        <livewire:admin.users.transactions :user="$user" />
-    </div>
-
 
     <!-- Orders Section -->
     <div class="mt-12">
