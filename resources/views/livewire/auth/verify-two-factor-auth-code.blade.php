@@ -1,10 +1,10 @@
 @push('head')
     <title>{{ __('Two-Factor Authentication') }} - {{ config('app.name') }}</title>
-    <meta name="description" content="{{ __('Verify your identity with a code sent to your phone or email') }}">
+    <meta name="description" content="{{ __('Verify your identity with a code sent to your email') }}">
 @endpush
 
 <div class="flex flex-col gap-6">
-    <x-typography.auth-header :title="__('Two-Factor Authentication')" :description="__($useEmail ? 'A verification code has been sent to your email. Please enter it below.' : 'A verification code has been sent to your phone. Please enter it below.')" />
+    <x-typography.auth-header :title="__('Two-Factor Authentication')" :description="__('A verification code has been sent to your email. Please enter it below.')" />
 
     <form wire:submit="verify" class="flex flex-col gap-6">
         <!-- Verification Code -->
@@ -24,16 +24,7 @@
     </form>
 
     <div class="flex flex-col gap-3 text-center text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-
         <p>{{ __('Didn\'t receive a code?') }} <span class="link cursor-pointer" wire:click="resendCode">{{ __('Resend') }}</span></p>
-
-        @if (!$useEmail)
-            <x-button type="button" variant="ghost" wire:click="useEmailInstead"
-                class="w-full" wire:loading.attr="disabled" wire:target="useEmailInstead">
-                {{ __('Use email instead') }}
-            </x-button>
-        @endif
-
         <x-button type="button" variant="ghost" wire:click="logout"
             class="w-full">
             {{ __('Use a different account') }}

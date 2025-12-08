@@ -1,6 +1,6 @@
 <section class="w-full">
     <!-- Header -->
-    <x-typography.settings-header :title="__('Two-Factor Authentication')" :description="__('Add an extra layer of security to your account by enabling two-factor authentication via SMS')" />
+    <x-typography.settings-header :title="__('Two-Factor Authentication')" :description="__('Add an extra layer of security to your account by enabling two-factor authentication via email')" />
 
     <!-- Current Status -->
     <div class="my-4 sm:my-6 w-full max-w-lg">
@@ -14,13 +14,8 @@
                     </div>
                     <div class="flex-1">
                         <p class="mt-1 text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                            {{ __('Your account is protected with SMS verification.') }}
+                            {{ __('Your account is protected with email verification codes.') }}
                         </p>
-                        @if (auth()->user()->phone)
-                            <p class="mt-2 text-xs sm:text-sm text-on-surface-muted dark:text-on-surface-dark-muted">
-                                {{ __('Phone number:') }} <span class="font-mono font-light">{{ str_repeat('*', max(0, strlen(auth()->user()->phone) - 4)) . substr(auth()->user()->phone, -4) }}</span>
-                            </p>
-                        @endif
                     </div>
                 </div>
                 <div class="mt-3 sm:mt-4">
@@ -39,7 +34,7 @@
                     </div>
                     <div class="flex-1">
                         <p class="mt-1 text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                            {{ __('Enable 2FA to receive a verification code via SMS each time you log in.') }}
+                            {{ __('Enable 2FA to receive a verification code via email each time you log in.') }}
                         </p>
                     </div>
                 </div>
@@ -52,7 +47,7 @@
         @endif
     </div>
 
-    <!-- Enable 2FA Modal (Step 1: Enter Phone Number) -->
+    <!-- Enable 2FA Modal (Step 1: Send Code to Email) -->
     <x-modal name="enable-2fa" maxWidth="lg">
         <x-slot name="header">
             <h3 class="heading-6 text-on-surface-strong dark:text-on-surface-dark-strong">
@@ -60,23 +55,10 @@
             </h3>
         </x-slot>
 
-        <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-2">
+        <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-4">
             <p class="text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('Enter your phone number to receive verification codes via SMS.') }}
+                {{ __('We will send a verification code to your primary email address.') }}
             </p>
-
-            <div class="flex flex-col gap-1">
-                <x-combobox-phone wireModel="phone" id="phone" name="phone" label="{{ __('Phone Number') }}"
-                    placeholder="+1 234-567-8900" defaultCountry="us" />
-                <x-input-error :messages="$errors->get('phone')" />
-            </div>
-
-            <div class="flex flex-col gap-1">
-                <x-checkbox wire:model="sms_consent" id="sms_consent" :label="__('I consent to receive SMS messages')" :description="__(
-                    'By checking this box, you agree to receive SMS messages for two-factor authentication purposes. Standard message and data rates may apply.',
-                )" />
-                <x-input-error :messages="$errors->get('sms_consent')" />
-            </div>
         </div>
 
         <x-slot name="footer">
@@ -91,18 +73,17 @@
         </x-slot>
     </x-modal>
 
-    <!-- Verify Phone Modal (Step 2: Enter Verification Code) -->
-    <x-modal name="verify-phone" maxWidth="md">
+    <!-- Verify 2FA Modal (Step 2: Enter Verification Code) -->
+    <x-modal name="verify-2fa" maxWidth="md">
         <x-slot name="header">
             <h3 class="heading-6 text-on-surface-strong dark:text-on-surface-dark-strong">
-                {{ __('Verify Phone Number') }}
+                {{ __('Verify Two-Factor Authentication') }}
             </h3>
         </x-slot>
 
         <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-2">
             <p class="text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('We\'ve sent a 6-digit verification code to') }} <span
-                    class="font-mono font-semibold">{{ $phone }}</span>
+                {{ __('We\'ve sent a 6-digit verification code to your email address.') }}
             </p>
 
             <div class="flex flex-col gap-1">
@@ -146,7 +127,7 @@
         </x-slot>
         <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-2">
             <p class="text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('Disabling two-factor authentication will make your account less secure. You will no longer receive SMS verification codes when logging in. Please enter your password to confirm.') }}
+                {{ __('Disabling two-factor authentication will make your account less secure. You will no longer receive email verification codes when logging in. Please enter your password to confirm.') }}
             </p>
 
             <div class="flex flex-col gap-1">

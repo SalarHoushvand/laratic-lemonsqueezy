@@ -21,7 +21,7 @@
     <p>{{ config('app.name') }} includes a comprehensive set of features to get your SaaS up and running:</p>
     <ul class="space-y-2">
         <li><strong>Authentication System</strong> - Complete user authentication with email/password, two-factor verification, and social login (Google, GitHub)</li>
-        <li><strong>Two-Factor Authentication</strong> - Enhanced security with 2FA support via email and SMS</li>
+        <li><strong>Two-Factor Authentication</strong> - Enhanced security with 2FA support via email</li>
         <li><strong>Subscription Management</strong> - Full subscription and one-time payment management with Paddle & Lemonsqueezy integration (Depending on your bundle)</li>
         <li><strong>Admin Dashboard</strong> - Comprehensive admin dashboard with analytics, user management, and more</li>
         <li><strong>AI-Powered Features</strong> - Interactive AI chat with streaming responses and AI-powered blog content generation</li>
@@ -69,7 +69,6 @@
         <li><strong>Spatie Laravel Sitemap</strong> - ^7.3 (sitemap generation)</li>
         <li><strong>Cloudinary Laravel</strong> - ^3.0 (image and media management)</li>
         <li><strong>Prism PHP</strong> - ^0.96.1 (AI integration)</li>
-        <li><strong>Vonage Notification Channel</strong> - ^3.3 (SMS notifications)</li>
         <li><strong>Symfony Mailgun Mailer</strong> - ^7.3 (email delivery)</li>
     </ul>
 

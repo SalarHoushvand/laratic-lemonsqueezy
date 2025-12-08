@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Notifications\EmailVerificationNotification;
-use App\Notifications\PhoneVerificationNotification;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +11,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use RuntimeException;
 
 /**
- * Two-Factor Authentication service for generating and verifying SMS codes.
+ * Two-Factor Authentication service for generating and verifying one-time codes.
  */
 class TwoFactor
 {
@@ -123,53 +122,6 @@ class TwoFactor
     public static function setRateLimit(int $userId): void
     {
         RateLimiter::increment(self::rateLimitKey($userId), decaySeconds: self::RATE_LIMIT_DECAY_SECONDS);
-    }
-
-    /**
-     * Send a verification code to the given phone number.
-     * Checks rate limiting, generates code, sets rate limit, and sends SMS.
-     *
-     * @param  int  $userId  The user ID
-     * @param  string  $phone  The phone number to send the code to
-     * @param  int  $ttlMinutes  Time to live in minutes (default: 10)
-     *
-     * @throws ThrottleRequestsException If rate limit is exceeded
-     * @throws RuntimeException If notification sending fails
-     */
-    public static function sendVerificationCode(int $userId, string $phone, int $ttlMinutes = 10): void
-    {
-        // Check rate limiting
-        if (! self::canRequestCode($userId)) {
-            $secondsRemaining = self::getSecondsUntilNextRequest($userId);
-
-            throw new ThrottleRequestsException(
-                __('You can request a new code in :seconds seconds', ['seconds' => $secondsRemaining]),
-                null,
-                [],
-                $secondsRemaining
-            );
-        }
-
-        // Generate verification code
-        $code = self::generateFor($userId, $ttlMinutes);
-
-        // Set rate limit (60 seconds cooldown)
-        self::setRateLimit($userId);
-
-        // Send SMS notification
-        try {
-            Notification::route('vonage', $phone)
-                ->notify(new PhoneVerificationNotification($code));
-        } catch (\Exception $e) {
-            Log::error('Failed to send 2FA verification code via SMS', [
-                'user_id' => $userId,
-                'phone' => $phone,
-                'error' => $e->getMessage(),
-            ]);
-
-            // Clear the generated code since notification failed
-            self::clear($userId);
-        }
     }
 
     /**

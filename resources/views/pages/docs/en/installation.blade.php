@@ -68,10 +68,6 @@ cd laratic</code></pre>
             <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mt-1">Required for image and media upload, storage, and optimization.</p>
         </li>
         <li>
-            <a href="{{ route('docs.show', ['topic' => 'sending-text-messages']) }}">Setup Vonage</a>
-            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mt-1">Required for SMS notifications and phone number verification.</p>
-        </li>
-        <li>
             <a href="{{ route('docs.show', ['topic' => 'auth/social-login/index']) }}">Setup Socialite</a>
             <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mt-1">Required for social authentication (OAuth login with providers like Google, GitHub, etc.).</p>
         </li>

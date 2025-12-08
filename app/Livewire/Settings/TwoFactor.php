@@ -9,11 +9,7 @@ use Livewire\Component;
 
 class TwoFactor extends Component
 {
-    public ?string $phone = '';
-
     public string $verification_code = '';
-
-    public bool $sms_consent = false;
 
     public string $password = '';
 
@@ -22,26 +18,16 @@ class TwoFactor extends Component
      */
     public function mount(): void
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $this->phone = $user->phone ?? '+1 '; // Default to US country code if no phone number is set
+        // No initialization required for email-based 2FA.
     }
 
     /**
-     * Send verification code after user enters phone number.
+     * Send verification code to the user's email address.
      */
     public function sendVerificationCode(): void
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
-        // Validate phone and consent
-        $this->validate([
-            'phone' => ['required', 'string', 'min:9', 'max:20'],
-            'sms_consent' => ['accepted'],
-        ], [
-            'sms_consent.accepted' => __('You must consent to receive SMS messages to enable two-factor authentication.'),
-        ]);
 
         // Rate limiting - check if user recently requested a code
         if (! TwoFactorService::canRequestCode($user->id)) {
@@ -57,9 +43,9 @@ class TwoFactor extends Component
             return;
         }
 
-        // Send verification code (handles generation, rate limiting, and SMS)
+        // Send verification code (handles generation, rate limiting, and email)
         try {
-            TwoFactorService::sendVerificationCode($user->id, $this->phone, 15);
+            TwoFactorService::sendVerificationCodeViaEmail($user->id, $user->email, 15);
         } catch (ThrottleRequestsException $e) {
             $this->dispatch(
                 'notify',
@@ -73,18 +59,18 @@ class TwoFactor extends Component
 
         // Close enable modal and open verification modal
         $this->dispatch('close-modal', name: 'enable-2fa');
-        $this->dispatch('open-modal', name: 'verify-phone');
+        $this->dispatch('open-modal', name: 'verify-2fa');
 
         $this->dispatch(
             'notify',
             variant: 'success',
             title: __('Verification code sent'),
-            message: __('A 6-digit code has been sent to your phone number')
+            message: __('A 6-digit code has been sent to your email address')
         );
     }
 
     /**
-     * Verify the phone number and enable 2FA.
+     * Verify the code and enable 2FA.
      */
     public function verifyAndEnable(): void
     {
@@ -102,22 +88,19 @@ class TwoFactor extends Component
             return;
         }
 
-        // Enable 2FA and save phone number
-        $user->phone = $this->phone;
-        $user->phone_verified_at = now();
+        // Enable 2FA
         $user->two_factor_enabled = true;
         $user->save();
 
         // Close modal and reset
         $this->dispatch('close-modal');
         $this->verification_code = '';
-        $this->phone = $user->phone;
 
         $this->dispatch(
             'notify',
             variant: 'success',
             title: __('Two-Factor Authentication enabled'),
-            message: __('Your account is now protected with SMS-based two-factor authentication')
+            message: __('Your account is now protected with email-based two-factor authentication')
         );
     }
 
@@ -143,9 +126,9 @@ class TwoFactor extends Component
             return;
         }
 
-        // Send verification code (handles generation, rate limiting, and SMS)
+        // Send verification code (handles generation, rate limiting, and email)
         try {
-            TwoFactorService::sendVerificationCode($user->id, $this->phone, 15);
+            TwoFactorService::sendVerificationCodeViaEmail($user->id, $user->email, 15);
         } catch (ThrottleRequestsException $e) {
             $this->dispatch(
                 'notify',
@@ -161,7 +144,7 @@ class TwoFactor extends Component
             'notify',
             variant: 'success',
             title: __('Code resent'),
-            message: __('A new verification code has been sent to your phone')
+            message: __('A new verification code has been sent to your email address')
         );
     }
 
@@ -178,8 +161,6 @@ class TwoFactor extends Component
         $user = Auth::user();
 
         $user->two_factor_enabled = false;
-        $user->phone = null;
-        $user->phone_verified_at = null;
         $user->save();
 
         $this->phone = '';

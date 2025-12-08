@@ -10,7 +10,7 @@
             'button_text' => __('Get Started'),
             'features' => [
                 __('Payments with Paddle'),
-                __('SMS & Email 2FA'),
+                __('Email 2FA'),
                 __('Multi-language support'),
                 __('AI-powered blog system'),
                 __('Admin dashboard'),
@@ -54,7 +54,7 @@
             'features' => [
                 __('Both packages included'),
                 __('Paddle & Lemonsqueezy'),
-                __('SMS & Email 2FA'),
+                __('Email 2FA'),
                 __('Multi-language support'),
                 __('AI-powered blog system'),
                 __('Admin dashboard'),

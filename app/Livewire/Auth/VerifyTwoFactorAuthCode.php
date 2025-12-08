@@ -26,8 +26,6 @@ class VerifyTwoFactorAuthCode extends Component
     #[Validate('required|string|size:6|regex:/^[0-9]{6}$/')]
     public string $code = '';
 
-    public bool $useEmail = false;
-
     /**
      * Mount the component and send initial verification code.
      */
@@ -53,15 +51,6 @@ class VerifyTwoFactorAuthCode extends Component
         if (! TwoFactorService::hasActiveCode($user->id)) {
             $this->sendCode();
         }
-    }
-
-    /**
-     * Switch to email verification and send code via email.
-     */
-    public function useEmailInstead(): void
-    {
-        $this->useEmail = true;
-        $this->sendCode();
     }
 
     /**
@@ -115,9 +104,7 @@ class VerifyTwoFactorAuthCode extends Component
 
         $this->sendCode();
 
-        $message = $this->useEmail
-            ? __('A new verification code has been sent to your email')
-            : __('A new verification code has been sent to your phone');
+        $message = __('A new verification code has been sent to your email');
 
         $this->dispatch(
             'notify',
@@ -128,7 +115,7 @@ class VerifyTwoFactorAuthCode extends Component
     }
 
     /**
-     * Send verification code to user's phone or email.
+     * Send verification code to user's email.
      */
     protected function sendCode(): void
     {
@@ -139,30 +126,15 @@ class VerifyTwoFactorAuthCode extends Component
             return;
         }
 
-        // Send verification code (handles generation, rate limiting, and SMS/Email)
+        // Send verification code (handles generation, rate limiting, and email)
         try {
-            if ($this->useEmail) {
-                TwoFactorService::sendVerificationCodeViaEmail($user->id, $user->email, self::CODE_TTL_MINUTES);
-                $this->dispatch(
-                    'notify',
-                    variant: 'success',
-                    title: __('Code sent'),
-                    message: __('A verification code has been sent to your email')
-                );
-            } else {
-                if (! $user->phone) {
-                    $this->dispatch(
-                        'notify',
-                        variant: 'error',
-                        title: __('Error'),
-                        message: __('No phone number found for your account.')
-                    );
-
-                    return;
-                }
-
-                TwoFactorService::sendVerificationCode($user->id, $user->phone, self::CODE_TTL_MINUTES);
-            }
+            TwoFactorService::sendVerificationCodeViaEmail($user->id, $user->email, self::CODE_TTL_MINUTES);
+            $this->dispatch(
+                'notify',
+                variant: 'success',
+                title: __('Code sent'),
+                message: __('A verification code has been sent to your email')
+            );
         } catch (ThrottleRequestsException $e) {
             $this->dispatch(
                 'notify',
