@@ -4,7 +4,7 @@
         content="Learn how to configure Paddle Billing and Cashier Paddle in {{ config('app.name') }}, including sandbox setup and environment variables.">
 @endpush
 
-<x-layouts.docs :breadcrumbs="[['label' => 'Billing', 'url' => '#'], ['label' => 'Paddle Setup', 'url' => '#']]">
+<x-layouts.docs :breadcrumbs="[['label' => 'Billing & Payments', 'url' => '#'], ['label' => 'Paddle', 'url' => '#'], ['label' => 'Setup', 'url' => '#']]">
 
     <h1>Paddle Setup</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
@@ -53,13 +53,13 @@ php artisan config:cache</code></pre>
     </p>
 
     <p>
-        See the dedicated <a href="{{ route('docs.show', 'paddle-webhooks') }}">Paddle Webhooks</a> page for details on
+        See the dedicated <a href="{{ route('docs.show', 'billing-payment/paddle/webhooks') }}">Paddle Webhooks</a> page for details on
         configuring and testing webhooks.
     </p>
 
     <h2>Webhooks</h2>
     <p>
-        Webhooks are used to receive events from Paddle and keep your local database in sync. See the dedicated <a href="{{ route('docs.show', 'paddle-webhooks') }}">Paddle Webhooks</a> page for details on
+        Webhooks are used to receive events from Paddle and keep your local database in sync. See the dedicated <a href="{{ route('docs.show', 'billing-payment/paddle/webhooks') }}">Paddle Webhooks</a> page for details on
         configuring and testing webhooks.
     </p>
 

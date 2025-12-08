@@ -72,7 +72,7 @@ cd laratic</code></pre>
             <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mt-1">Required for social authentication (OAuth login with providers like Google, GitHub, etc.).</p>
         </li>
         <li>
-            <a href="{{ route('docs.show', ['topic' => 'paddle-setup']) }}">Setup Paddle</a>
+            <a href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/setup']) }}">Setup Lemon Squeezy</a>
             <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mt-1">Required for billing and subscriptions.</p>
         </li>
     </ul>

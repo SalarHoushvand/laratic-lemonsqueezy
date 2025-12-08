@@ -4,7 +4,7 @@
         content="Learn how to define and sell single-payment products with Paddle Billing and Cashier in {{ config('app.name') }}.">
 @endpush
 
-<x-layouts.docs :breadcrumbs="[['label' => 'Billing', 'url' => '#'], ['label' => 'One-Time Products', 'url' => '#']]">
+<x-layouts.docs :breadcrumbs="[['label' => 'Billing & Payments', 'url' => '#'], ['label' => 'Paddle', 'url' => '#'], ['label' => 'One-Time Products', 'url' => '#']]">
 
     <h1>One-Time Products (Single Payments)</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
@@ -39,7 +39,7 @@
             </ul>
         </li>
         <li>Ensure Paddle sends <code>price.created</code> and <code>price.updated</code> webhooks to your app (see
-            <a href="{{ route('docs.show', 'paddle-webhooks') }}">Paddle Webhooks</a>).
+            <a href="{{ route('docs.show', 'billing-payment/paddle/webhooks') }}">Paddle Webhooks</a>).
         </li>
     </ol>
 

@@ -3,68 +3,68 @@
     $plans = [
         (object) [
             'name' => 'Laratic Startup',
-            'description' => __('Suitable for startups and small businesses'),
+            'description' => '<p><strong>' . __('For startups and small businesses who need a complete solution.') . '</strong></p>
+<ul>
+<li><p>' . __('Payments with Paddle') . '</p></li>
+<li><p>' . __('Email and SMS 2FA') . '</p></li>
+<li><p>' . __('Multi-language support') . '</p></li>
+<li><p>' . __('AI-powered blog system') . '</p></li>
+<li><p>' . __('Admin dashboard') . '</p></li>
+<li><p>' . __('Recurring subscriptions') . '</p></li>
+<li><p>' . __('AI chat integration') . '</p></li>
+<li><p>' . __('Roles & permissions') . '</p></li>
+<li><p>' . __('Email templates') . '</p></li>
+<li><p>' . __('SEO optimization') . '</p></li>
+</ul>',
             'price' => 14900, // in cents
             'currency' => 'USD',
             'billing_period' => 'one-time',
             'button_text' => __('Get Started'),
-            'features' => [
-                __('Payments with Paddle'),
-                __('Email 2FA'),
-                __('Multi-language support'),
-                __('AI-powered blog system'),
-                __('Admin dashboard'),
-                __('Recurring subscriptions'),
-                __('AI chat integration'),
-                __('Roles & permissions'),
-                __('Email templates'),
-                __('SEO optimization'),
-            ],
             'is_featured' => false,
             'href' => '#',
         ],
         (object) [
             'name' => 'Laratic Indie Hacker',
-            'description' => __('Suitable for indie hackers and solo developers who want to keep it nice and simple'),
+            'description' => '<p><strong>' . __('For indie hackers and solo developers who want to keep it simple.') . '</strong></p>
+<ul>
+<li><p>' . __('Payments with LemonSqueezy') . '</p></li>
+<li><p>' . __('Email only 2FA') . '</p></li>
+<li><p>' . __('Single-language support') . '</p></li>
+<li><p>' . __('AI-powered blog system') . '</p></li>
+<li><p>' . __('Admin dashboard') . '</p></li>
+<li><p>' . __('Recurring subscriptions') . '</p></li>
+<li><p>' . __('AI chat integration') . '</p></li>
+<li><p>' . __('Roles & permissions') . '</p></li>
+<li><p>' . __('Email templates') . '</p></li>
+</ul>',
             'price' => 9900, // in cents
             'currency' => 'USD',
             'billing_period' => 'one-time',
             'button_text' => __('Get Started'),
-            'features' => [
-                __('Payments with Lemonsqueezy'),
-                __('Email only 2FA'),
-                __('Single-language support'),
-                __('AI-powered blog system'),
-                __('Admin dashboard'),
-                __('Recurring subscriptions'),
-                __('AI chat integration'),
-                __('Roles & permissions'),
-                __('Email templates'),
-            ],
             'is_featured' => true,
             'href' => '#',
         ],
         (object) [
             'name' => 'Dual Package',
-            'description' => __('Both packages included for the best value'),
+            'description' => '<p><strong>' . __('The complete solution with both packages for the best value.') . '</strong></p>
+<ul>
+<li><p>' . __('Both packages included') . '</p></li>
+<li><p>' . __('Paddle & LemonSqueezy payments') . '</p></li>
+<li><p>' . __('Email 2FA') . '</p></li>
+<li><p>' . __('Multi-language support') . '</p></li>
+<li><p>' . __('AI-powered blog system') . '</p></li>
+<li><p>' . __('Admin dashboard') . '</p></li>
+<li><p>' . __('Recurring subscriptions') . '</p></li>
+<li><p>' . __('AI chat integration') . '</p></li>
+<li><p>' . __('Roles & permissions') . '</p></li>
+<li><p>' . __('Email templates') . '</p></li>
+<li><p>' . __('SEO optimization') . '</p></li>
+<li><p>' . __('Best value') . '</p></li>
+</ul>',
             'price' => 19900, // in cents
             'currency' => 'USD',
             'billing_period' => 'one-time',
             'button_text' => __('Get Started'),
-            'features' => [
-                __('Both packages included'),
-                __('Paddle & Lemonsqueezy'),
-                __('Email 2FA'),
-                __('Multi-language support'),
-                __('AI-powered blog system'),
-                __('Admin dashboard'),
-                __('Recurring subscriptions'),
-                __('AI chat integration'),
-                __('Roles & permissions'),
-                __('Email templates'),
-                __('SEO optimization'),
-                __('Best value'),
-            ],
             'is_featured' => false,
             'href' => '#',
         ],

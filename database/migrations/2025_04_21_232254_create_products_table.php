@@ -17,14 +17,12 @@ return new class extends Migration
             $table->string('description');
             $table->unsignedInteger('price');
             $table->string('currency');
-            $table->string('category')->nullable();
             $table->string('lemon_squeezy_product_id');
             $table->string('lemon_squeezy_variant_id')->unique();
             $table->string('img_url')->nullable();
             $table->string('status')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->json('features')->nullable();
-            $table->string('delivery_method')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

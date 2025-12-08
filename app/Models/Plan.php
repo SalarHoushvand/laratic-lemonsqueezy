@@ -23,5 +23,6 @@ class Plan extends Model
         'price_ids' => 'array',
         'price' => 'integer',
         'is_featured' => 'boolean',
+        'sort_order' => 'integer',
     ];
 }

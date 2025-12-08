@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('trial_period')->nullable();
             $table->string('trial_interval')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->json('features')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

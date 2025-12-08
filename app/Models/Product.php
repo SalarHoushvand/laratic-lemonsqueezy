@@ -22,5 +22,6 @@ class Product extends Model
         'features' => 'array',
         'price' => 'integer',
         'is_featured' => 'boolean',
+        'sort_order' => 'integer',
     ];
 }

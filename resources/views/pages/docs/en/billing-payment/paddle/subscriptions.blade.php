@@ -4,7 +4,7 @@
         content="Learn how subscription plans, pricing, monthly and yearly options are managed with Paddle and Cashier in {{ config('app.name') }}.">
 @endpush
 
-<x-layouts.docs :breadcrumbs="[['label' => 'Billing', 'url' => '#'], ['label' => 'Subscriptions', 'url' => '#']]">
+<x-layouts.docs :breadcrumbs="[['label' => 'Billing & Payments', 'url' => '#'], ['label' => 'Paddle', 'url' => '#'], ['label' => 'Subscriptions', 'url' => '#']]">
 
     <h1>Subscriptions, Plans &amp; Pricing Page</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
@@ -33,7 +33,7 @@
             </ul>
         </li>
         <li>Ensure Paddle sends <code>price.created</code> webhooks to your app (see
-            <a href="{{ route('docs.show', 'paddle-webhooks') }}">Paddle Webhooks</a>).
+            <a href="{{ route('docs.show', 'billing-payment/paddle/webhooks') }}">Paddle Webhooks</a>).
         </li>
     </ol>
 

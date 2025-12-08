@@ -1,3 +1,6 @@
+@push('head')
+    <title>{{ __('Upload File') }}</title>
+@endpush
 <div class="flex flex-col gap-6">
     <x-typography.admin-page-header :title="__('Upload File')" :description="__('Upload files to Cloudinary and get a shareable URL instantly.')" />
 

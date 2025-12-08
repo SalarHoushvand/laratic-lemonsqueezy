@@ -19,6 +19,8 @@
         <x-blocks.welcome.statistics class="mt-24" />
 
         <x-blocks.welcome.integrations class="mt-24" />
+
+        <x-blocks.welcome.themes class="mt-24" />
         
         <x-blocks.welcome.testimonials class="mt-24" />
 

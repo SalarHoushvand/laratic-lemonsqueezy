@@ -135,36 +135,74 @@
                 </li>
             </ul>
 
-            {{-- Billing & Paddle Section --}}
+            {{-- Billing & Payments Section --}}
             <x-blocks.docs.sidebar-topic title="Billing & Payments" />
             <ul class="pl-4">
+                <li
+                    class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-on-surface-muted dark:text-on-surface-dark-muted">
+                    {{ __('Paddle') }}
+                </li>
                 <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
-                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'paddle-setup']) }}"
-                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'paddle-setup'">
-                        <span>{{ __('Paddle Setup') }}</span>
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/paddle/setup']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/paddle/setup'">
+                        <span>{{ __('Setup') }}</span>
                     </x-blocks.docs.sidebar-link>
                 </li>
                 <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
-                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'paddle-subscriptions']) }}"
-                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'paddle-subscriptions'">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/paddle/subscriptions']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/paddle/subscriptions'">
                         <span>{{ __('Subscription Plans') }}</span>
                     </x-blocks.docs.sidebar-link>
                 </li>
                 <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
-                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'paddle-products']) }}"
-                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'paddle-products'">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/paddle/products']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/paddle/products'">
                         <span>{{ __('One-Time Products') }}</span>
                     </x-blocks.docs.sidebar-link>
                 </li>
                 <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
-                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'paddle-orders']) }}"
-                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'paddle-orders'">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/paddle/orders']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/paddle/orders'">
                         <span>{{ __('Orders & Transactions') }}</span>
                     </x-blocks.docs.sidebar-link>
                 </li>
                 <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
-                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'paddle-webhooks']) }}"
-                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'paddle-webhooks'">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/paddle/webhooks']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/paddle/webhooks'">
+                        <span>{{ __('Webhooks & Testing') }}</span>
+                    </x-blocks.docs.sidebar-link>
+                </li>
+                <li
+                    class="px-2 pt-4 text-xs font-semibold uppercase tracking-wide text-on-surface-muted dark:text-on-surface-dark-muted">
+                    {{ __('Lemon Squeezy') }}
+                </li>
+                <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/setup']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/lemon-squeezy/setup'">
+                        <span>{{ __('Setup') }}</span>
+                    </x-blocks.docs.sidebar-link>
+                </li>
+                <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/subscriptions']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/lemon-squeezy/subscriptions'">
+                        <span>{{ __('Subscription Plans') }}</span>
+                    </x-blocks.docs.sidebar-link>
+                </li>
+                <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/products']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/lemon-squeezy/products'">
+                        <span>{{ __('One-Time Products') }}</span>
+                    </x-blocks.docs.sidebar-link>
+                </li>
+                <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/orders']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/lemon-squeezy/orders'">
+                        <span>{{ __('Orders & Transactions') }}</span>
+                    </x-blocks.docs.sidebar-link>
+                </li>
+                <li class="border-l border-outline px-2 py-0.5 dark:border-outline-dark">
+                    <x-blocks.docs.sidebar-link href="{{ route('docs.show', ['topic' => 'billing-payment/lemon-squeezy/webhooks']) }}"
+                        :active="request()->routeIs('docs.show') && request()->route('topic') === 'billing-payment/lemon-squeezy/webhooks'">
                         <span>{{ __('Webhooks & Testing') }}</span>
                     </x-blocks.docs.sidebar-link>
                 </li>

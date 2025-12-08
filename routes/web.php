@@ -14,6 +14,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubscriptionController;
 use App\Livewire\Admin\FileUpload;
+use App\Livewire\Admin\PlansProducts;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -106,6 +107,7 @@ Route::middleware(['auth', 'two-factor-auth'])->group(function () {
         Route::get('/admin/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         Route::get('/admin/ai-usage', [AdminAiUsageController::class, 'index'])->name('admin.ai-usage');
         Route::livewire('/admin/files/upload', FileUpload::class)->name('admin.files.upload');
+        Route::livewire('/admin/plans-products', PlansProducts::class)->name('admin.plans-products');
 
         // Admin blog posts
         Route::controller(AdminPostController::class)->prefix('admin/posts')->name('admin.posts.')->group(function () {

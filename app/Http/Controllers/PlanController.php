@@ -64,7 +64,11 @@ class PlanController extends Controller
      */
     public function pricing(Request $request)
     {
-        $plans = Plan::where('status', 'published')->get();
+        $plans = Plan::where('status', 'published')
+            ->orderBy('sort_order')
+            ->orderByDesc('is_featured')
+            ->orderBy('id')
+            ->get();
 
         return view('pages.pricing', compact('plans'));
     }

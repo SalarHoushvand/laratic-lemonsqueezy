@@ -4,7 +4,7 @@
         content="Understand how orders and transactions work with Paddle Billing in {{ config('app.name') }}, including user and admin views.">
 @endpush
 
-<x-layouts.docs :breadcrumbs="[['label' => 'Billing', 'url' => '#'], ['label' => 'Orders & Transactions', 'url' => '#']]">
+<x-layouts.docs :breadcrumbs="[['label' => 'Billing & Payments', 'url' => '#'], ['label' => 'Paddle', 'url' => '#'], ['label' => 'Orders & Transactions', 'url' => '#']]">
 
     <h1>Orders &amp; Transactions</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">

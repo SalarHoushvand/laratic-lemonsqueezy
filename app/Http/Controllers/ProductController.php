@@ -13,7 +13,9 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::where('status', 'published')
-            ->orderBy('is_featured', 'desc')
+            ->orderBy('sort_order')
+            ->orderByDesc('is_featured')
+            ->orderBy('id')
             ->get();
 
         return view('pages.products.index', compact('products'));

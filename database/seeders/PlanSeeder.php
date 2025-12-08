@@ -40,7 +40,6 @@ class PlanSeeder extends Seeder
                 'trial_period' => $data['trial_period'] !== 'NULL' ? $data['trial_period'] : null,
                 'trial_interval' => $data['trial_interval'] !== 'NULL' ? $data['trial_interval'] : null,
                 'is_featured' => (bool) $data['is_featured'],
-                'features' => json_decode($data['features'], true),
                 'created_at' => $data['created_at'],
                 'updated_at' => $data['updated_at'],
             ]);

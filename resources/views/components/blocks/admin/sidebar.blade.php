@@ -68,6 +68,13 @@
                 </x-sidebar-link>
             </li>
 
+            <li>
+                <x-sidebar-link href="{{ route('admin.plans-products') }}" :active="request()->routeIs('admin.plans-products')">
+                    <x-icons.credit-card variant="outline" />
+                    <span>{{ __('Plans & Products') }}</span>
+                </x-sidebar-link>
+            </li>
+
             <!-- Collapsible Posts Item -->
             <li>
                 <div x-data="{ isExpanded: {{ request()->routeIs('admin.posts.*') ? 'true' : 'false' }} }" class="flex flex-col">

@@ -55,7 +55,9 @@ class Manage extends Component
     {
         /** @var User $user */
         $this->user = Auth::user();
-        $this->plans = Plan::where('status', 'published')->get();
+        $this->plans = Plan::where('status', 'published')
+            ->orderBy('sort_order')
+            ->get();
         $this->currentPlan = $this->user->currentPlanName();
 
         $subscription = $this->user->subscription();

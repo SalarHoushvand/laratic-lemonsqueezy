@@ -4,7 +4,7 @@
         content="Learn how to set up and test Paddle webhooks in {{ config('app.name') }} using ngrok for local development.">
 @endpush
 
-<x-layouts.docs :breadcrumbs="[['label' => 'Billing', 'url' => '#'], ['label' => 'Paddle Webhooks', 'url' => '#']]">
+<x-layouts.docs :breadcrumbs="[['label' => 'Billing & Payments', 'url' => '#'], ['label' => 'Paddle', 'url' => '#'], ['label' => 'Webhooks', 'url' => '#']]">
 
     <h1>Paddle Webhooks &amp; Testing</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
