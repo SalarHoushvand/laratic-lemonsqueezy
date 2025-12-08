@@ -17,6 +17,11 @@
     z-index: 999 !important;
 }
 
+/* Full height for fullscreen mode */
+.EasyMDEContainer .CodeMirror-fullscreen .CodeMirror-scroll {
+    max-height: none !important;
+}
+
 .EasyMDEContainer .editor-toolbar.fullscreen {
     z-index: 999;
 }
