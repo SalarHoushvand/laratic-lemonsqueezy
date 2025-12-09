@@ -88,6 +88,10 @@
     background-color: color-mix(in srgb, var(--color-primary-dark) 25%, transparent);
 }
 
+.dark .CodeMirror-selectedtext {
+    background-color:var(--color-surface-dark);
+}
+
 /* Placeholder text */
 .dark .EasyMDEContainer .CodeMirror pre.CodeMirror-placeholder {
     color: color-mix(in srgb, var(--color-on-surface-dark) 55%, transparent);

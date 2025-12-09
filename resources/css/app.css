@@ -752,13 +752,6 @@
     background-size: 30px 30px;
 }
 
-.bg-pattern-2 {
-    background-image: url('https://res.cloudinary.com/ds8pgw1pf/image/upload/v1741111334/penguinui/templates/Cloudix/codioful-formerly-gradienta-OzfD79w8ptA-unsplash.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
 
 [x-cloak] {
     display: none !important;

@@ -6,8 +6,9 @@
     <h1 class="sr-only">{{ __('Dashboard') }}</h1>
 
     <!-- Date Range Selector -->
-    <div class="mb-6 w-full md:w-auto md:max-w-[23.4%]">
+    <div class="mb-6 w-full md:w-auto md:max-w-[23.4%] space-y-0.5">
         <x-date-range-selector :selected="$dateRange" class="w-full" />
+        <small class="text-on-surface-muted dark:text-on-surface-dark-muted text-xs">{{ __('All times are in UTC') }}</small>
     </div>
 
     <!-- Quick Stats Section -->

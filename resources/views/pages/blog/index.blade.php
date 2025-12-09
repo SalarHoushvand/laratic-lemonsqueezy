@@ -22,7 +22,7 @@
             @endisset
 
             @if($posts->count() > 0)
-                <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-8 md:gap-12">
+                <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto gap-8 md:gap-6">
                     @foreach ($posts as $post)
                         <x-card-post :post="$post" />
                     @endforeach

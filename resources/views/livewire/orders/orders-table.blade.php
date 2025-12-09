@@ -2,8 +2,8 @@
     @if ($searchable)
         <!-- Search Input -->
         <div class="mb-4">
-            <x-input wire:model.live="search" class="w-full md:max-w-xs" variant="search"
-                :placeholder="__('Search orders...')" :aria-label="__('Search orders')" />
+            <x-input wire:model.live="search" class="w-full md:max-w-xs" variant="search" :placeholder="__('Search orders...')"
+                :aria-label="__('Search orders')" />
         </div>
     @endif
 
@@ -26,17 +26,30 @@
                                 {{ $order->order_number }}
                             </div>
                         </td>
-                        <td class="p-4">{{ $order->created_at->toFormattedDateString() }}</td>
+                        <td class="p-4">
+                            @php
+                                $date = $order->ordered_at ?? $order->created_at;
+                                $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
+                                $localDate = $date->copy()->setTimezone($userTimezone);
+                                $gmtDate = $date->copy()->setTimezone('UTC');
+                            @endphp
+                            <div class="whitespace-nowrap font-mono">
+                                <div class="text-xs ">{{ $localDate->format('M d, Y H:i') }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    {{ $gmtDate->format('M d, Y H:i') }} UTC
+                                </div>
+                            </div>
+                        </td>
                         <td class="p-4 capitalize">
-                           <x-badge variant="outline-{{ $order->status === 'paid' ? 'success' : 'info' }}">{{ __($order->status) }}</x-badge>
+                            <x-badge
+                                variant="outline-{{ $order->status === 'paid' ? 'success' : 'info' }}">{{ __($order->status) }}</x-badge>
                         </td>
 
                         <td class="p-4">{{ Number::currency($order->total / 100, $order->currency) }}</td>
                         <td class="p-4">{{ Number::currency($order->discount_total / 100, $order->currency) }}</td>
                         <td class="p-4">
                             @if ($order->receipt_url)
-                                <a href="{{ $order->receipt_url }}"
-                                    target="_blank"
+                                <a href="{{ $order->receipt_url }}" target="_blank"
                                     class="whitespace-nowrap rounded-radius bg-transparent p-0.5 font-semibold text-primary outline-primary hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 active:opacity-100 active:outline-offset-0 dark:text-primary-dark dark:outline-primary-dark">
                                     {{ __('View Receipt') }}
                                 </a>
@@ -53,7 +66,8 @@
     @else
         <x-blocks.empty-state icon="shopping-cart" class="h-[50svh]" title="{{ __('No orders') }}"
             description="{{ __('We couldn’t find any orders.') }}">
-            <x-button class="mt-2" variant="outline" size="xs" href="{{ route('products.index') }}" :aria-label="__('Browse Products')">
+            <x-button class="mt-2" variant="outline" size="xs" href="{{ route('products.index') }}"
+                :aria-label="__('Browse Products')">
                 {{ __('View Products') }}
             </x-button>
         </x-blocks.empty-state>

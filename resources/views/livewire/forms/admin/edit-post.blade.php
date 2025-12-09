@@ -72,7 +72,7 @@
                                 <div x-data="{ err: false }">
                                     <img x-show="!err" x-on:error="err = true" src="{{ $image_url }}"
                                         alt="{{ $title ? $title . ' image' : __('Image preview') }}"
-                                        class="mx-auto w-full h-120 rounded-radius object-cover" />
+                                        class="mx-auto w-full h-auto rounded-radius" />
                                     <div x-show="err" class="text-sm text-on-surface dark:text-on-surface-dark">
                                         {{ __('Could not load image. Check the URL.') }}
                                     </div>

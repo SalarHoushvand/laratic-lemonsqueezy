@@ -20,14 +20,38 @@
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
-                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('Order Date') }}</p>
-                        <p class="text-on-surface dark:text-on-surface-dark">
-                            {{ $order->ordered_at?->setTimezone(auth()->user()?->timezone ?? 'America/New_York')->format('M d, Y H:i:s') ?? $order->created_at->setTimezone(auth()->user()?->timezone ?? 'America/New_York')->format('M d, Y H:i:s') }}
+                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                            {{ __('Order Date') }}
                         </p>
+                        @php
+                            $orderDate = $order->ordered_at ?? $order->created_at;
+                            $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
+                            // Get raw database value to avoid timezone conversion issues
+                            // Use timestamp (timezone-agnostic) to create UTC Carbon instance
+                            $timestamp = $orderDate->timestamp;
+                            // Create Carbon instance from timestamp explicitly in UTC
+                            $orderDateUtc = \Carbon\Carbon::createFromTimestamp($timestamp, 'UTC');
+                            // GMT is the same as UTC
+                            $gmtDate = $orderDateUtc->copy();
+                            // Convert to user's timezone
+                            $userDate = $orderDateUtc->copy()->setTimezone($userTimezone);
+                        @endphp
+                        <div class="space-y-1">
+                            <p class="flex flex-col text-on-surface dark:text-on-surface-dark">
+                                <span class="text-on-surface-muted dark:text-on-surface-dark-muted text-xs">GMT</span>
+                                <span class="text-sm font-mono">{{ $gmtDate->format('M d, Y H:i:s') }}</span>
+                            </p>
+                            <p class="flex flex-col text-on-surface dark:text-on-surface-dark">
+                                <span
+                                    class="text-on-surface-muted dark:text-on-surface-dark-muted text-xs">{{ $userTimezone }}</span>
+                                <span class="text-sm font-mono">{{ $userDate->format('M d, Y H:i:s') }}</span>
+                            </p>
+                        </div>
                     </div>
 
                     <div>
-                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('Payment Status') }}</p>
+                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                            {{ __('Payment Status') }}</p>
                         <p class="text-on-surface dark:text-on-surface-dark">
                             <x-blocks.admin.orders.status-badge :order="$order" />
                         </p>
@@ -35,15 +59,17 @@
 
                     @if ($order->product_type)
                         <div>
-                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('Type') }}</p>
+                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                                {{ __('Type') }}</p>
                             <p class="text-on-surface dark:text-on-surface-dark">
-                               {{ __(ucfirst($order->product_type)) }}
+                                {{ __(ucfirst($order->product_type)) }}
                             </p>
                         </div>
                     @endif
 
                     <div>
-                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('LemonSqueezy Order ID') }}</p>
+                        <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                            {{ __('LemonSqueezy Order ID') }}</p>
                         <p class="text-on-surface dark:text-on-surface-dark font-mono text-sm">
                             {{ $order->lemon_squeezy_id ?: __('N/A') }}
                         </p>
@@ -51,7 +77,8 @@
 
                     @if ($order->product_id)
                         <div>
-                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('LemonSqueezy Product ID') }}</p>
+                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                                {{ __('LemonSqueezy Product ID') }}</p>
                             <p class="text-on-surface dark:text-on-surface-dark font-mono text-sm">
                                 {{ $order->product_id }}
                             </p>
@@ -60,7 +87,8 @@
 
                     @if ($order->variant_id)
                         <div>
-                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('LemonSqueezy Variant ID') }}</p>
+                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm mb-1">
+                                {{ __('LemonSqueezy Variant ID') }}</p>
                             <p class="text-on-surface dark:text-on-surface-dark font-mono text-sm">
                                 {{ $order->variant_id }}
                             </p>
@@ -69,7 +97,8 @@
 
                     @if ($order->receipt_url)
                         <div>
-                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">{{ __('Receipt') }}</p>
+                            <p class="text-on-surface-muted dark:text-on-surface-dark-muted text-sm">
+                                {{ __('Receipt') }}</p>
                             <p class="text-on-surface dark:text-on-surface-dark">
                                 <a href="{{ $order->receipt_url }}" target="_blank" class="link">
                                     {{ __('View Receipt') }}
@@ -94,7 +123,8 @@
 
                         @if ($order->discount_total > 0)
                             <div class="flex justify-between items-center">
-                                <span class="text-on-surface dark:text-on-surface-dark text-sm">{{ __('Discount') }}</span>
+                                <span
+                                    class="text-on-surface dark:text-on-surface-dark text-sm">{{ __('Discount') }}</span>
                                 <span class="font-mono text-sm text-danger">
                                     -{{ Number::currency($order->discount_total / 100, $order->currency) }}
                                 </span>
@@ -106,7 +136,8 @@
                                 <span class="text-on-surface dark:text-on-surface-dark text-sm">
                                     {{ __('Tax') }}
                                     @if ($order->tax_name)
-                                        <span class="text-on-surface-muted dark:text-on-surface-dark-muted">({{ $order->tax_name }})</span>
+                                        <span
+                                            class="text-on-surface-muted dark:text-on-surface-dark-muted">({{ $order->tax_name }})</span>
                                     @endif
                                 </span>
                                 <span class="text-on-surface dark:text-on-surface-dark font-mono text-sm">
@@ -115,9 +146,12 @@
                             </div>
                         @endif
 
-                        <div class="flex justify-between items-center border-t border-outline dark:border-outline-dark pt-2 mt-2">
-                            <span class="font-medium text-on-surface-strong dark:text-on-surface-dark-strong">{{ __('Total') }}</span>
-                            <span class="font-semibold text-on-surface-strong dark:text-on-surface-dark-strong font-mono">
+                        <div
+                            class="flex justify-between items-center border-t border-outline dark:border-outline-dark pt-2 mt-2">
+                            <span
+                                class="font-medium text-on-surface-strong dark:text-on-surface-dark-strong">{{ __('Total') }}</span>
+                            <span
+                                class="font-semibold text-on-surface-strong dark:text-on-surface-dark-strong font-mono">
                                 {{ Number::currency($order->total / 100, $order->currency) }}
                             </span>
                         </div>

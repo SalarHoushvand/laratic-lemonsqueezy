@@ -44,7 +44,20 @@
                                     wire:key="role-{{ $role->id }}">{{ ucfirst($role->name) }}</x-badge>
                             @endforeach
                         </td>
-                        <td class="text-center p-4">{{ $user->created_at->format('M d, Y') }}</td>
+                        <td class="p-4 text-center">
+                            @php
+                                $date = $user->created_at;
+                                $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
+                                $localDate = $date->copy()->setTimezone($userTimezone);
+                                $gmtDate = $date->copy()->setTimezone('UTC');
+                            @endphp
+                            <div class="whitespace-nowrap font-mono">
+                                <div class="text-xs ">{{ $localDate->format('M d, Y H:i') }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    {{ $gmtDate->format('M d, Y H:i') }} UTC
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-center p-4">
                             @if ($user->subscribed())
                                 <x-badge variant="outline-primary">{{ $user->currentPlanName() }}</x-badge>

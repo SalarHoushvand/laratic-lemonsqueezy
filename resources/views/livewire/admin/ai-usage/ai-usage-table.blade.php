@@ -32,8 +32,19 @@
                         <td class="p-4 font-mono">
                             {{ number_format($aiUsage->total_cost, 5) }} {{ strtoupper($aiUsage->currency) }}
                         </td>
-                        <td class="p-4">
-                            {{ $aiUsage->created_at->setTimezone(auth()->user()?->timezone ?? 'America/New_York')->format('M d, Y H:i:s') }}
+                        <td class="p-4 font-mono">
+                            @php
+                                $date = $aiUsage->created_at;
+                                $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
+                                $localDate = $date->copy()->setTimezone($userTimezone);
+                                $gmtDate = $date->copy()->setTimezone('UTC');
+                            @endphp
+                            <div class="whitespace-nowrap">
+                                <div class="text-xs ">{{ $localDate->format('M d, Y H:i') }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    {{ $gmtDate->format('M d, Y H:i') }} UTC
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

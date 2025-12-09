@@ -13,7 +13,18 @@
                 <tr onclick="window.location.href='{{ route('admin.orders.show', $order) }}'"
                     class="cursor-pointer hover:bg-surface-dark/5 dark:hover:bg-surface/5 transition-colors">
                     <td class="p-4">
-                        {{ $order->ordered_at?->setTimezone(auth()->user()?->timezone ?? 'America/New_York')->format('M d, Y H:i') ?? $order->created_at->setTimezone(auth()->user()?->timezone ?? 'America/New_York')->format('M d, Y H:i') }}
+                        @php
+                            $date = $order->ordered_at ?? $order->created_at;
+                            $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
+                            $localDate = $date->copy()->setTimezone($userTimezone);
+                            $gmtDate = $date->copy()->setTimezone('UTC');
+                        @endphp
+                        <div class="whitespace-nowrap font-mono">
+                            <div class="text-xs ">{{ $localDate->format('M d, Y H:i') }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {{ $gmtDate->format('M d, Y H:i') }} UTC
+                            </div>
+                        </div>
                     </td>
                     <td class="p-4">
                         <x-blocks.admin.orders.status-badge :order="$order" />

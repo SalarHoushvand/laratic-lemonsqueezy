@@ -80,7 +80,7 @@
                     @foreach ($relatedPosts as $relatedPost)
                         <div class="flex flex-col md:flex-row items-center gap-4">
                             @if ($relatedPost->image_url)
-                                <img class="rounded-radius w-full max-h-44 object-cover object-center"
+                                <img class="rounded-radius w-full h-auto max-w-48"
                                     src="{{ $relatedPost->image_url }}"
                                     alt="{{ __($relatedPost->title) }}">
                             @endif

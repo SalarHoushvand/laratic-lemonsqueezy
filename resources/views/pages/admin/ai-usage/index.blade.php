@@ -6,8 +6,9 @@
     <x-typography.admin-page-header :title="__('AI Usage')" :description="__('View and manage AI usage records here.')" />
 
     <!-- Date Range Selector -->
-    <div class="mb-6 max-w-full md:max-w-[23.4%]">
+    <div class="mb-6 max-w-full md:max-w-[23.4%] space-y-0.5">
         <x-date-range-selector :selected="$dateRange" />
+        <small class="text-on-surface-muted dark:text-on-surface-dark-muted text-xs">{{ __('All times are in UTC') }}</small>
     </div>
 
     <!-- AI Usage Statistics -->
