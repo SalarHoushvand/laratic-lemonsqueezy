@@ -14,15 +14,15 @@
             <x-blocks.blog.categories class="mb-12 w-full" :categories="$categories" />
         @endif
 
-        <div class="max-w-6xl mx-auto flex flex-col gap-8 md:gap-12 mb-24">
+        <div class="max-w-6xl mx-auto flex flex-col gap-6 mb-24">
             @isset($featuredPost)
-                <div class="w-full max-w-5xl mx-auto">
+                <div class="w-full max-w-6xl mx-auto">
                     <x-card-post-horizontal :post="$featuredPost" />
                 </div>
             @endisset
 
             @if($posts->count() > 0)
-                <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto gap-8 md:gap-6">
+                <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6">
                     @foreach ($posts as $post)
                         <x-card-post :post="$post" />
                     @endforeach
