@@ -55,6 +55,13 @@
             </li>
 
             <li>
+                <x-sidebar-link href="{{ route('admin.subscription-invoices') }}" :active="request()->routeIs('admin.subscription-invoices')">
+                    <x-icons.document-currency-dollar variant="outline" />
+                    <span>{{ __('Subscription Invoices') }}</span>
+                </x-sidebar-link>
+            </li>
+
+            <li>
                 <x-sidebar-link href="{{ route('admin.ai-usage') }}" :active="request()->routeIs('admin.ai-usage')">
                     <x-icons.sparkles variant="outline" />
                     <span>{{ __('AI Usage') }}</span>

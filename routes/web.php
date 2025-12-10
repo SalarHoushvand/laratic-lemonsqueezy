@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AiUsageController as AdminAiUsageController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\SubscriptionInvoiceController as AdminSubscriptionInvoiceController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\Auth\SocialAuthController;
@@ -111,6 +112,8 @@ Route::middleware(['auth', 'two-factor-auth'])->group(function () {
         Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
         Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         Route::get('/admin/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+        Route::get('/admin/subscription-invoices', [AdminSubscriptionInvoiceController::class, 'index'])->name('admin.subscription-invoices');
+        Route::get('/admin/subscription-invoices/{subscriptionInvoice}', [AdminSubscriptionInvoiceController::class, 'show'])->name('admin.subscription-invoices.show');
         Route::get('/admin/ai-usage', [AdminAiUsageController::class, 'index'])->name('admin.ai-usage');
         Route::livewire('/admin/files/upload', FileUpload::class)->name('admin.files.upload');
         Route::livewire('/admin/plans-products', PlansProducts::class)->name('admin.plans-products');
