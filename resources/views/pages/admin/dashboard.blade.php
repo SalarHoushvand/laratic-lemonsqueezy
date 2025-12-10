@@ -23,11 +23,11 @@
     </div>
 
     <div class="col-span-12 flex flex-col gap-6 grid-cols-12 mt-6 w-full xl:grid">
-        <!-- Revenue Chart -->
+        <!-- Total Revenue Chart -->
         <div
             class="panel col-span-12 xl:col-span-6 flex flex-col justify-center p-4">
             <h2 class="heading-5 text-on-surface-strong dark:text-on-surface-dark-strong">
-                {{ __('Revenue') }}
+                {{ __('Total revenue') }}
             </h2>
             <x-line-chart :categories="$labels" :data="$revenueData" :currency="'$'" />
         </div>
@@ -36,9 +36,40 @@
         <div
             class="panel col-span-12 xl:col-span-6 flex flex-col justify-center p-4">
             <h2 class="heading-5 text-on-surface-strong dark:text-on-surface-dark-strong">
-                {{ __('Subscriptions') }}
+                {{ __('Total active subscriptions') }}
             </h2>
             <x-line-chart :categories="$labels" :data="$subscriptionData" />
+        </div>
+    </div>
+
+    <div class="col-span-12 flex flex-col gap-6 grid-cols-12 mt-6 w-full xl:grid">
+        <!-- Subscription Revenue Chart -->
+        <div
+            class="panel col-span-12 xl:col-span-6 flex flex-col justify-center p-4">
+            <h2 class="heading-5 text-on-surface-strong dark:text-on-surface-dark-strong">
+                {{ __('Revenue from subscriptions') }}
+            </h2>
+            <x-line-chart :categories="$labels" :data="$subscriptionRevenueData" :currency="'$'" />
+        </div>
+
+        <!-- One-time Revenue Chart -->
+        <div
+            class="panel col-span-12 xl:col-span-6 flex flex-col justify-center p-4">
+            <h2 class="heading-5 text-on-surface-strong dark:text-on-surface-dark-strong">
+                {{ __('Revenue from one-time orders') }}
+            </h2>
+            <x-line-chart :categories="$labels" :data="$oneTimeRevenueData" :currency="'$'" />
+        </div>
+    </div>
+
+    <div class="col-span-12 flex flex-col gap-6 grid-cols-12 mt-6 w-full xl:grid">
+        <!-- MRR Chart -->
+        <div
+            class="panel col-span-12 xl:col-span-12 flex flex-col justify-center p-4">
+            <h2 class="heading-5 text-on-surface-strong dark:text-on-surface-dark-strong">
+                {{ __('MRR (estimate from active subscriptions)') }}
+            </h2>
+            <x-line-chart :categories="$labels" :data="$mrrData" :currency="'$'" />
         </div>
     </div>
 </x-layouts.admin>

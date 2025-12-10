@@ -2,10 +2,10 @@
 
 namespace App\Listeners;
 
+use App\Models\SubscriptionInvoice;
 use Carbon\Carbon;
 use LemonSqueezy\Laravel\Events\WebhookHandled;
 use LemonSqueezy\Laravel\Order;
-use LemonSqueezy\Laravel\Subscription;
 use Illuminate\Support\Facades\Log;
 
 class LemonSqueezyEventListener
@@ -53,20 +53,11 @@ class LemonSqueezyEventListener
             }
 
             if ($orderType === 'one-time') {
-                // Keep the order and update product_type
+                // Update product_type for one-time orders
                 $order->update(['product_type' => 'one-time']);
-
-                Log::info('One-time order product_type updated', [
-                    'order_id' => $orderId,
-                    'product_type' => 'one-time',
-                ]);
             } elseif ($orderType === 'subscription') {
-                // Remove subscription orders (they will be created from subscription_payment_success)
-                $order->delete();
-
-                Log::info('Subscription order removed (will be created from subscription_payment_success)', [
-                    'order_id' => $orderId,
-                ]);
+                // Update product_type for subscription orders
+                $order->update(['product_type' => 'subscription']);
             }
         } catch (\Exception $e) {
             Log::error('Failed to handle order_created event', [
@@ -82,10 +73,15 @@ class LemonSqueezyEventListener
     private function handleSubscriptionPaymentSuccess(array $payload): void
     {
         try {
-            $invoiceId = $payload['data']['id'] ?? null;
-            $subscriptionId = $payload['data']['attributes']['subscription_id'] ?? null;
+            $data = $payload['data'] ?? [];
+            $attributes = $data['attributes'] ?? [];
             $customData = $payload['meta']['custom_data'] ?? [];
-            $attributes = $payload['data']['attributes'] ?? [];
+
+            $invoiceId = $data['id'] ?? null;
+            $subscriptionId = $attributes['subscription_id'] ?? null;
+            $customerId = $attributes['customer_id'] ?? null;
+            $billableId = $customData['billable_id'] ?? null;
+            $billableType = $customData['billable_type'] ?? null;
 
             if (! $invoiceId || ! $subscriptionId) {
                 Log::warning('Missing invoice_id or subscription_id in webhook payload', [
@@ -95,10 +91,6 @@ class LemonSqueezyEventListener
 
                 return;
             }
-
-            $billableId = $customData['billable_id'] ?? null;
-            $billableType = $customData['billable_type'] ?? null;
-            $customerId = $attributes['customer_id'] ?? null;
 
             if (! $billableId || ! $billableType) {
                 Log::warning('Missing billable_id or billable_type in webhook payload', [
@@ -117,59 +109,41 @@ class LemonSqueezyEventListener
                 return;
             }
 
-            // Find the subscription to get product_id and variant_id
-            $subscription = Subscription::where('lemon_squeezy_id', (string) $subscriptionId)->first();
+            // Check if invoice already exists
+            $existingInvoice = SubscriptionInvoice::where('lemon_squeezy_id', (string) $invoiceId)->first();
 
-            if (! $subscription) {
-                Log::warning('Subscription not found in database', [
-                    'lemon_squeezy_id' => $subscriptionId,
-                ]);
-
-                return;
-            }
-
-            // Check if order already exists for this invoice
-            $existingOrder = Order::where('lemon_squeezy_id', (string) $invoiceId)->first();
-
-            if ($existingOrder) {
-                Log::info('Order already exists for subscription invoice', [
+            if ($existingInvoice) {
+                Log::info('Subscription invoice already exists', [
                     'invoice_id' => $invoiceId,
                 ]);
 
                 return;
             }
 
-            // Generate a unique identifier for the order
-            $identifier = $attributes['urls']['invoice_url'] ?? 'sub-invoice-'.$invoiceId;
-
-            // Create order from subscription invoice
-            Order::create([
+            // Create subscription invoice
+            SubscriptionInvoice::create([
                 'billable_id' => (int) $billableId,
                 'billable_type' => $billableType,
                 'lemon_squeezy_id' => (string) $invoiceId,
+                'subscription_id' => (string) $subscriptionId,
                 'customer_id' => (string) $customerId,
-                'identifier' => $identifier,
-                'product_id' => (string) $subscription->product_id,
-                'variant_id' => (string) $subscription->variant_id,
-                'product_type' => 'subscription',
-                'order_number' => (int) $invoiceId,
                 'currency' => $attributes['currency'] ?? 'USD',
                 'subtotal' => (int) ($attributes['subtotal'] ?? 0),
                 'discount_total' => (int) ($attributes['discount_total'] ?? 0),
                 'tax' => (int) ($attributes['tax'] ?? 0),
                 'total' => (int) ($attributes['total'] ?? 0),
-                'tax_name' => $attributes['tax_name'] ?? null,
                 'status' => $attributes['status'] ?? 'paid',
-                'receipt_url' => $attributes['urls']['invoice_url'] ?? null,
+                'invoice_url' => $attributes['urls']['invoice_url'] ?? null,
                 'refunded' => (bool) ($attributes['refunded'] ?? false),
-                'refunded_at' => $attributes['refunded_at'] ? Carbon::parse($attributes['refunded_at']) : null,
-                'ordered_at' => isset($attributes['created_at']) ? Carbon::parse($attributes['created_at']) : now(),
-            ]);
-
-            Log::info('Subscription order created from payment success', [
-                'invoice_id' => $invoiceId,
-                'subscription_id' => $subscriptionId,
-                'billable_id' => $billableId,
+                'refunded_at' => isset($attributes['refunded_at']) && $attributes['refunded_at']
+                    ? Carbon::parse($attributes['refunded_at'])
+                    : null,
+                'billing_reason' => $attributes['billing_reason'] ?? 'initial',
+                'card_brand' => $attributes['card_brand'] ?? null,
+                'card_last_four' => $attributes['card_last_four'] ?? null,
+                'invoiced_at' => isset($attributes['created_at'])
+                    ? Carbon::parse($attributes['created_at'])
+                    : now(),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to handle subscription_payment_success event', [

@@ -71,23 +71,9 @@
             </li>
 
             <li>
-                <x-sidebar-link href="{{ route('subscription.manage') }}" :active="request()->routeIs('subscription.manage')">
-                    <x-icons.credit-card variant="outline" />
-                    <span>{{ __('Subscription') }}</span>
-                </x-sidebar-link>
-            </li>
-
-            <li>
                 <x-sidebar-link href="{{ route('products.index') }}" :active="request()->routeIs('products.index')">
                     <x-icons.building-storefront variant="outline" />
-                    <span>{{ __('Products') }}</span>
-                </x-sidebar-link>
-            </li>
-
-            <li>
-                <x-sidebar-link href="{{ route('orders.index') }}" :active="request()->routeIs('orders.index')">
-                    <x-icons.shopping-cart variant="outline" />
-                    <span>{{ __('Orders') }}</span>
+                    <span>{{ __('Marketplace') }}</span>
                 </x-sidebar-link>
             </li>
         </ul>
@@ -125,6 +111,24 @@
                             {{ auth()->user()->email }}
                         </p>
                     </div>
+                </li>
+                <li>
+                    <x-dropdown-link href="{{ route('subscription.manage') }}">
+                        <x-icons.credit-card variant="mini" />
+                        {{ __('Subscription') }}
+                    </x-dropdown-link>
+                </li>
+                <li>
+                    <x-dropdown-link href="{{ route('orders.index') }}">
+                        <x-icons.shopping-cart variant="mini" />
+                        {{ __('Orders') }}
+                    </x-dropdown-link>
+                </li>
+                <li>
+                    <x-dropdown-link href="{{ route('subscription-invoices.index') }}">
+                        <x-icons.document-currency-dollar variant="mini" />
+                        {{ __('Subscription Invoices') }}
+                    </x-dropdown-link>
                 </li>
                 <li>
                     <x-dropdown-link href="{{ route('settings') }}">

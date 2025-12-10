@@ -5,7 +5,7 @@
 
 <x-layouts.app>
     <div class="p-8">
-        <x-typography.admin-page-header :title="__('Orders')" :description="__('View all your one-time payment orders.')" />
+        <x-typography.admin-page-header :title="__('Orders')" :description="__('View all your orders.')" />
 
         <livewire:orders.orders-table />    
     </div>

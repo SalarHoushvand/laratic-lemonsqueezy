@@ -2,34 +2,34 @@
     @if ($searchable)
         <!-- Search Input -->
         <div class="mb-4">
-            <x-input wire:model.live="search" class="w-full md:max-w-xs" variant="search" :placeholder="__('Search orders...')"
-                :aria-label="__('Search orders')" />
+            <x-input wire:model.live="search" class="w-full md:max-w-xs" variant="search" :placeholder="__('Search invoices...')"
+                :aria-label="__('Search invoices')" />
         </div>
     @endif
 
-    @if ($orders->isNotEmpty())
+    @if ($invoices->isNotEmpty())
         <x-table>
             <x-slot:head>
-                <th scope="col" class="p-4">{{ __('Order #') }}</th>
+                <th scope="col" class="p-4">{{ __('Invoice #') }}</th>
                 <th scope="col" class="p-4">{{ __('Date') }}</th>
-                <th scope="col" class="p-4">{{ __('Type') }}</th>
+                <th scope="col" class="p-4">{{ __('Billing Reason') }}</th>
                 <th scope="col" class="p-4">{{ __('Status') }}</th>
                 <th scope="col" class="p-4">{{ __('Total') }}</th>
                 <th scope="col" class="p-4">{{ __('Discount') }}</th>
-                <th scope="col" class="p-4">{{ __('Receipt') }}</th>
+                <th scope="col" class="p-4">{{ __('Invoice') }}</th>
             </x-slot:head>
 
             <x-slot:body>
-                @foreach ($orders as $order)
-                    <tr wire:key="order-{{ $order->id }}">
+                @foreach ($invoices as $invoice)
+                    <tr wire:key="invoice-{{ $invoice->id }}">
                         <td class="p-4">
                             <div class="flex items-center gap-2">
-                                {{ $order->order_number }}
+                                {{ $invoice->lemon_squeezy_id }}
                             </div>
                         </td>
                         <td class="p-4">
                             @php
-                                $date = $order->ordered_at ?? $order->created_at;
+                                $date = $invoice->invoiced_at ?? $invoice->created_at;
                                 $userTimezone = auth()->user()?->timezone ?? 'America/New_York';
                                 $localDate = $date->copy()->setTimezone($userTimezone);
                                 $gmtDate = $date->copy()->setTimezone('UTC');
@@ -42,24 +42,30 @@
                             </div>
                         </td>
                         <td class="p-4">
-                            @if ($order->product_type)
-                                <x-badge>{{ __(ucfirst($order->product_type)) }}</x-badge>
-                            @else
-                                {{ __('N/A') }}
-                            @endif
+                            <x-badge>{{ __(ucfirst($invoice->billing_reason)) }}</x-badge>
                         </td>
                         <td class="p-4 capitalize">
+                            @php
+                                $statusVariant = match ($invoice->status) {
+                                    'paid' => 'outline-success',
+                                    'pending' => 'outline-info',
+                                    'void' => 'outline-warning',
+                                    'refunded', 'partial_refund' => 'outline-danger',
+                                    default => 'outline-info',
+                                };
+                            @endphp
                             <x-badge
-                                variant="outline-{{ $order->status === 'paid' ? 'success' : 'info' }}">{{ __($order->status) }}</x-badge>
+                                variant="{{ $statusVariant }}">{{ __(ucfirst(str_replace('_', ' ', $invoice->status))) }}</x-badge>
                         </td>
 
-                        <td class="p-4">{{ Number::currency($order->total / 100, $order->currency) }}</td>
-                        <td class="p-4">{{ Number::currency($order->discount_total / 100, $order->currency) }}</td>
+                        <td class="p-4">{{ Number::currency($invoice->total / 100, $invoice->currency) }}</td>
+                        <td class="p-4">{{ Number::currency($invoice->discount_total / 100, $invoice->currency) }}
+                        </td>
                         <td class="p-4">
-                            @if ($order->receipt_url)
-                                <a href="{{ $order->receipt_url }}" target="_blank"
+                            @if ($invoice->invoice_url)
+                                <a href="{{ $invoice->invoice_url }}" target="_blank"
                                     class="whitespace-nowrap rounded-radius bg-transparent p-0.5 font-semibold text-primary outline-primary hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 active:opacity-100 active:outline-offset-0 dark:text-primary-dark dark:outline-primary-dark">
-                                    {{ __('View Receipt') }}
+                                    {{ __('View Invoice') }}
                                 </a>
                             @endif
                         </td>
@@ -69,14 +75,13 @@
         </x-table>
 
         <div class="mt-4">
-            {{ $orders->links() }}
+            {{ $invoices->links() }}
         </div>
     @else
-        <x-blocks.empty-state icon="shopping-cart" class="h-[50svh]" title="{{ __('No orders') }}"
-            description="{{ __('We couldn’t find any orders.') }}">
-            <x-button class="mt-2" variant="outline" size="xs" href="{{ route('products.index') }}"
-                :aria-label="__('Browse Products')">
-                {{ __('View Products') }}
+        <x-blocks.empty-state icon="document-currency-dollar" class="h-[50svh]" :title="__('No invoices')"
+            :description="__('We couldn\'t find any subscription invoices.')">
+            <x-button class="mt-2" variant="outline" size="xs" :href="route('subscription.manage')" :aria-label="__('Manage Subscription')">
+                {{ __('Manage Subscription') }}
             </x-button>
         </x-blocks.empty-state>
     @endif
