@@ -11,7 +11,6 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PlanController;
-use App\Http\Controllers\SubscriptionInvoiceController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubscriptionController;
@@ -94,11 +93,6 @@ Route::middleware(['auth', 'two-factor-auth'])->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/status/{order_id}', 'status')->name('status');
         Route::get('/pending/{order_id}', 'pending')->name('pending');
-    });
-
-    // Subscription Invoices
-    Route::controller(SubscriptionInvoiceController::class)->prefix('subscription-invoices')->name('subscription-invoices.')->group(function () {
-        Route::get('/', 'index')->name('index');
     });
 
     // AI Chat routes

@@ -332,4 +332,12 @@
             </p>
         </div>
     @endif
+
+    <!-- Subscription Invoices -->
+    <div>
+        <h2 class="heading-5 mb-6 text-on-surface-strong dark:text-on-surface-dark-strong">
+            {{ __('Subscription Invoices') }}
+        </h2>
+        <livewire:subscription-invoices.subscription-invoices-table />
+    </div>
 </div>

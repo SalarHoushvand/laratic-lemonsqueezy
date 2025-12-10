@@ -125,12 +125,6 @@
                     </x-dropdown-link>
                 </li>
                 <li>
-                    <x-dropdown-link href="{{ route('subscription-invoices.index') }}">
-                        <x-icons.document-currency-dollar variant="mini" />
-                        {{ __('Subscription Invoices') }}
-                    </x-dropdown-link>
-                </li>
-                <li>
                     <x-dropdown-link href="{{ route('settings') }}">
                         <x-icons.cog variant="mini" />
                         {{ __('Settings') }}

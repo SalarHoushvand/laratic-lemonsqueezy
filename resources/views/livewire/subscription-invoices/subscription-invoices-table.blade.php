@@ -80,9 +80,7 @@
     @else
         <x-blocks.empty-state icon="document-currency-dollar" class="h-[50svh]" :title="__('No invoices')"
             :description="__('We couldn\'t find any subscription invoices.')">
-            <x-button class="mt-2" variant="outline" size="xs" :href="route('subscription.manage')" :aria-label="__('Manage Subscription')">
-                {{ __('Manage Subscription') }}
-            </x-button>
+      
         </x-blocks.empty-state>
     @endif
 </div>
