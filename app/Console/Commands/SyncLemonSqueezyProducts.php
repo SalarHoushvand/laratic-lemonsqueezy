@@ -65,6 +65,14 @@ class SyncLemonSqueezyProducts extends Command
                     ?? $productAttributes['thumb_url']
                     ?? null;
 
+                // Remove query parameters from image URL
+                if ($productImage) {
+                    $queryPosition = strpos($productImage, '?');
+                    if ($queryPosition !== false) {
+                        $productImage = substr($productImage, 0, $queryPosition);
+                    }
+                }
+
                 // Fetch variants for this product using the "related" link
                 $variantsUrl = $product['relationships']['variants']['links']['related'] ?? null;
 

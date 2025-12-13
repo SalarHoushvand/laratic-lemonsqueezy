@@ -12,6 +12,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.2",
+        "ext-intl": "*",
         "cloudinary-labs/cloudinary-laravel": "^3.0",
         "drewm/mailchimp-api": "^2.5",
         "guzzlehttp/guzzle": "^7.9",
