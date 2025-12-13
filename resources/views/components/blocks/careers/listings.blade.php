@@ -36,8 +36,7 @@
                     <h3 class="heading-4">
                         {{ __($listing['title']) }}
                     </h3>
-                    <x-button :href="$listing['url']" target="_blank">{{ __('Apply Now') }} <x-icons.arrow-top-right-on-square
-                            size="sm" /></x-button>
+                    <x-button :href="$listing['url']" target="_blank" class="h-fit" size="sm">{{ __('Apply Now') }} <x-icons.arrow-top-right-on-square size="sm" /></x-button>
                 </div>
                 <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
                     {{ __($listing['description']) }}

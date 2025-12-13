@@ -46,24 +46,12 @@
 ])
 
 <div {{ $attributes }}>
-    <div class="flex flex-col justify-center items-center gap-4">
-        <h2 class="heading-3 text-center max-w-xl">
-            {{ __('Testimonials') }}
-        </h2>
-        <div class="flex items-center justify-center gap-2">
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-        </div>
-        <p class="text-center max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
-            {{ __('We asked some of our favorite AI assistants to give us their thoughts on Laratic. We would love to ') }} <span class="text-primary dark:text-primary-dark">{{ __('replace AI with humans.') }}</span>  Please <a href="mailto:penguinui2024@gmail.com" class="link">share your thoughts</a> with us.
-        </p>
-    </div>
+    <x-typography.guest-page-header title="{{ __('Testimonials') }}"
+        description="{{ __('We asked some of our favorite AI assistants to give us their thoughts on Laratic. We would love to replace AI with humans. Please share your thoughts with us.') }}"
+        size="h2" :divider-dots="true" />
 
     <div
-        class="relative transform-3d columns-1 sm:columns-2 lg:columns-3 gap-6 mt-16 w-full mx-auto *:mb-6 *:break-inside-avoid">
+        class="relative transform-3d columns-1 sm:columns-2 lg:columns-3 gap-6 mt-12 md:mt-16 w-full mx-auto *:mb-6 *:break-inside-avoid">
         <!-- Background Effects -->
         <div
             class="absolute -z-10 w-[20%] aspect-square top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2 bg-primary dark:bg-primary-dark opacity-30 rotate-180 animate-float blur-[60px]">

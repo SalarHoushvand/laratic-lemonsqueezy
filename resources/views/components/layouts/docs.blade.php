@@ -25,7 +25,8 @@
             <div role="main"
                 class="
                     max-w-3xl
-                    p-6
+                    min-w-0
+                    p-2 md:p-6
                     docs-content
                     prose
                     prose-sm
@@ -33,6 +34,11 @@
                     dark:prose-invert
                     leading-relaxed
                     break-words
+                    prose-table:block
+                    prose-table:max-w-full
+                    prose-table:overflow-x-auto
+                    prose-table:w-max
+                    prose-table:min-w-full
                     prose-pre:text-sm
                     prose-pre:p-2
                     font-body
@@ -48,7 +54,7 @@
                     prose-img:rounded-radius
                     prose-img:border-outline
                     prose-img:border
-                  prose-img:dark:border-outline-dark
+                    prose-img:dark:border-outline-dark
                 ">
                 {{ $slot }}
             </div>

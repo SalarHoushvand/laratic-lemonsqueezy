@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use LemonSqueezy\Laravel\Order;
+use Illuminate\Support\Str;
 
 class OrderSeeder extends Seeder
 {
@@ -84,7 +85,7 @@ class OrderSeeder extends Seeder
                     'lemon_squeezy_id' => (string) $currentOrderNumber,
                     // LemonSqueezy customer IDs are numeric (e.g., 5000000)
                     'customer_id' => (string) (5000000 + $userId),
-                    'identifier' => 'order-'.$currentOrderNumber.'-'.time(),
+                    'identifier' => Str::uuid(),
                     'product_id' => $item->lemon_squeezy_product_id,
                     'variant_id' => $item->lemon_squeezy_variant_id,
                     'product_type' => $productType,

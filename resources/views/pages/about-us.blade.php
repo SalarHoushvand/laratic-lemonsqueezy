@@ -10,13 +10,13 @@
 
         <x-blocks.about-us.hero />
 
-        <x-blocks.about-us.our-story class="mb-28" />
+        <x-blocks.about-us.our-story class="mb-12 md:mb-28" />
 
-        <x-blocks.about-us.statistics class="my-20" />
+        <x-blocks.about-us.statistics class="my-12 md:my-20" />
 
-        <x-blocks.about-us.our-team class="my-20" />
+        <x-blocks.about-us.our-team class="my-12 md:my-20" />
 
-        <x-blocks.about-us.contact-us class="my-24 scroll-mt-24" />
+        <x-blocks.about-us.contact-us class="my-12 md:my-24 scroll-mt-24" />
 
     </div>
 </x-layouts.guest>

@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('avatar')->nullable();
+            $table->text('avatar')->nullable();
             $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('street')->nullable();
+            $table->text('street')->nullable();
             $table->string('zip')->nullable();
             $table->string('timezone')->nullable()->default('America/New_York');
             $table->timestamp('phone_verified_at')->nullable();

@@ -26,7 +26,7 @@
     <div class="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 flex-wrap">
         @foreach ($logos as $logo)
             <img src="{{ asset('/images/' . $logo['image']) }}" alt="{{ $logo['name'] }}"
-                class="w-14 sm:w-16 md:w-20 h-auto dark:grayscale hover:grayscale-0 transition-all duration-200 z-1"
+                class="w-12 sm:w-16 md:w-20 h-auto dark:grayscale hover:grayscale-0 transition-all duration-200 z-1"
                 loading="lazy" decoding="async">
         @endforeach
     </div>

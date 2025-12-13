@@ -26,7 +26,7 @@
         </div>
     @endif
     @isset ($description)
-        <p class="text-sm md:text-base text-center max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
+        <p class="text-sm md:text-base text-center max-w-md text-on-surface-muted dark:text-on-surface-dark-muted text-pretty">
             {{ __($description) }}
         </p>
     @endisset

@@ -55,7 +55,7 @@
             <livewire:admin.posts.publish-post-banner :post="$post" />
         @endif
 
-        <div class="flex flex-col p-16 gap-4 max-w-3xl mx-auto">
+        <div class="flex flex-col p-6 md:p-16 gap-4 max-w-3xl mx-auto">
             <div class="flex items-center justify-between">
                 <small>
                     {{ $post->created_at->format('M d, Y') }}

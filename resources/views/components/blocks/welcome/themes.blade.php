@@ -75,22 +75,12 @@
         }, 100);
     }
 }" x-init="init()" x-on:mouseenter="stop()" x-on:mouseleave="start()"
-    {{ $attributes->merge(['class' => 'p-8']) }}>
-    <div class="flex flex-col justify-center items-center gap-4">
-        <h2 class="heading-3 text-center max-w-xl">
-            {{ __('Beautiful Themes') }}
-        </h2>
-        <div class="flex items-center justify-center gap-2">
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-        </div>
-        <p class="text-center max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
-            {{ __('Choose from a variety of stunning themes to match your style.') }}
-        </p>
-    </div>
+    {{ $attributes->merge(['class' => 'p-0 md:p-8']) }}>
+    <x-typography.guest-page-header
+        title="{{ __('Beautiful Themes') }}"
+        description="{{ __('Choose from a variety of stunning themes to match your style.') }}"
+        size="h2"
+        :divider-dots="true" />
 
     <div class="relative mx-auto w-full max-w-7xl mt-12 overflow-hidden">
         <div x-ref="track" class="themes-carousel-track flex flex-nowrap gap-4 md:gap-6 overflow-x-auto w-full" style="scroll-behavior: smooth;">

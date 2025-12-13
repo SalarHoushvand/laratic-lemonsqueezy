@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('tax');
             $table->unsignedInteger('total');
             $table->string('status');
-            $table->string('invoice_url')->nullable();
+            $table->text('invoice_url')->nullable();
             $table->boolean('refunded')->default(false);
             $table->dateTime('refunded_at')->nullable();
             $table->string('billing_reason');

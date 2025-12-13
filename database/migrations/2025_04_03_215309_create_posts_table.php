@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('reference_number');
-            $table->string('title');
-            $table->string('description')->nullable();
-            $table->string('slug')->unique();
-            $table->string('image_url')->nullable();
+            $table->text('title');
+            $table->text('description')->nullable();
+            $table->text('slug')->unique();
+            $table->text('image_url')->nullable();
             $table->string('author')->nullable();
             $table->longText('content')->nullable();
             $table->boolean('is_promoted')->default(false);

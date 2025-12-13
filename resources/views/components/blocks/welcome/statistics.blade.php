@@ -4,30 +4,30 @@
         <!-- Global Clients Stat -->
         <div class="flex flex-col items-center justify-center gap-2">
             <p class="text-2xl font-bold text-primary dark:text-primary-dark">
-                {{ __('200+') }}
+                {{ __('Several Months') }}
             </p>
             <p class="text-lg">
-                {{ __('Clients Empowered Globally') }}
+                {{ __('Development Time Saved') }}
             </p>
         </div>
 
         <!-- Uptime Guarantee Stat -->
         <div class="flex flex-col items-center justify-center gap-2">
             <p class="text-2xl font-bold text-primary dark:text-primary-dark">
-                {{ __('99.99%') }}
+                {{ __('+50') }}
             </p>
             <p class="text-lg">
-                {{ __('Uptime Guarantee') }}
+                {{ __('Beautifully designed pages') }}
             </p>
         </div>
 
         <!-- Support Availability Stat -->
         <div class="flex flex-col items-center justify-center gap-2">
             <p class="text-2xl font-bold text-primary dark:text-primary-dark">
-                {{ __('24/7') }}
+                {{ __('+30') }}
             </p>
             <p class="text-lg">
-                {{ __('Customer Support Availability') }}
+                {{ __('Blade UI Components') }}
             </p>
         </div>
     </div>

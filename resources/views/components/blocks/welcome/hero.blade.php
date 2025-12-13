@@ -8,13 +8,14 @@
             <x-icons.clock variant="micro" size="sm" class="text-primary dark:text-primary-dark" />
             <span>{{ __('Save Months of Development Time') }}</span>
         </x-badge>
+        
         <!-- Heading -->
-        <h1 class="heading-1 text-balance">
+        <h1 class="heading-2 md:heading-1 text-balance">
             {{ __('Build your') }} <span class="text-primary dark:text-primary-dark">{{ __('Laravel Apps') }}</span>
             {{ __('Fast and ship them faster') }} <br>
         </h1>
         <!-- Description -->
-        <p class="max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
+        <p class="text-sm md:text-base max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
             {{ __('All-in-one Laravel starter kit for SaaS applications') }}
         </p>
         <!-- CTA Buttons -->

@@ -24,7 +24,7 @@
         <!-- Support Availability Stat -->
         <div class="flex flex-col items-center justify-center gap-2">
             <p class="text-2xl font-bold text-primary dark:text-primary-dark">
-                {{ __('+25') }}
+                {{ __('+30') }}
             </p>
             <p class="text-lg">
                 {{ __('Blade UI Components') }}

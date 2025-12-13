@@ -14,21 +14,21 @@
 
         <x-blocks.welcome.large-banner />
        
-        <x-blocks.welcome.features class="mt-24 max-w-6xl mx-auto scroll-mt-24" id="features" />
+        <x-blocks.welcome.features class="mt-16 md:mt-24 max-w-6xl mx-auto scroll-mt-24" id="features" />
 
-        <x-blocks.welcome.statistics class="mt-24" />
+        <x-blocks.welcome.statistics class="mt-16 md:mt-24" />
 
-        <x-blocks.welcome.integrations class="mt-24" />
+        <x-blocks.welcome.integrations class="mt-16 md:mt-24" />
 
-        <x-blocks.welcome.themes class="mt-24" />
+        <x-blocks.welcome.themes class="mt-16 md:mt-24" />
         
-        <x-blocks.welcome.testimonials class="mt-24" />
+        <x-blocks.welcome.testimonials class="mt-16 md:mt-24" />
 
-        <x-blocks.welcome.pricing class="mt-24" />
+        <x-blocks.welcome.pricing class="mt-16 md:mt-24" id="pricing" />
 
-        <x-blocks.welcome.all-features class="mt-24" />
+        <x-blocks.welcome.all-features class="mt-16 md:mt-24" />
 
-        <x-blocks.welcome.faq class="mt-32 max-w-3xl mx-auto mb-24" />
+        <x-blocks.welcome.faq class="mt-16 md:mt-32 max-w-3xl mx-auto mb-16 md:mb-24" />
 
         <x-blocks.blog.newsletter id="newsletter-signup" class="my-12" />
 

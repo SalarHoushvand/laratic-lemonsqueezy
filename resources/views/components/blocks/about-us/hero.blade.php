@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center justify-center gap-8 py-16 md:py-24">
+<div class="flex flex-col items-center justify-center gap-8 py-8 md:py-24">
     <!-- Background Blur Effect -->
     <div class="absolute -z-10 -top-20 left-1/2 h-40 w-80 -translate-x-1/2 rounded-full bg-primary opacity-30 blur-[60px] dark:bg-primary-dark"
         aria-hidden="true"></div>

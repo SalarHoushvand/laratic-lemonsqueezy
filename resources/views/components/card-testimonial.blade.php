@@ -9,7 +9,7 @@
 ])
 
 <article
-    {{ $attributes->merge(['class' => 'group text-sm rounded-radius flex max-w-sm flex-col border border-outline bg-surface-alt p-6 text-on-surface dark:border-outline-dark dark:bg-surface-dark/50 dark:text-on-surface-dark backdrop-blur-sm']) }}>
+    {{ $attributes->merge(['class' => 'group text-sm rounded-radius flex max-w-full md:max-w-sm flex-col border border-outline bg-surface-alt p-6 text-on-surface dark:border-outline-dark dark:bg-surface-dark/50 dark:text-on-surface-dark backdrop-blur-sm']) }}>
     {{-- Quote Icon --}}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
         class="size-8 text-primary dark:text-primary-dark group-hover:scale-105 transition duration-500 ease-out"

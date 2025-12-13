@@ -7,7 +7,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use LemonSqueezy\Laravel\Order;
 
 class AdminController extends Controller
 {
@@ -41,22 +40,22 @@ class AdminController extends Controller
             $dateRange = 'last_30_days';
         }
 
-        [$startDate, $endDate, $previousStartDate] = $this->getDateRangeDates($dateRange, $request);
+        [$startDate, $endDate, $previousStartDate] = $this->getDateRangeDates($dateRange);
 
         // Get metrics data with optimized queries
-        $metrics = $this->getMetrics($startDate, $endDate, $previousStartDate, $request);
+        $metrics = $this->getMetrics($startDate, $endDate, $previousStartDate);
 
         // Determine chart interval and get data based on date range
         $useDaily = $this->shouldUseDailyInterval($dateRange);
 
         if ($useDaily) {
             [$revenueData, $subscriptionRevenueData, $oneTimeRevenueData, $labels] = $this->getDailyRevenue($startDate, $endDate);
-            $subscriptionData = $this->getDailyTotalSubscriptionsOptimized($startDate, $endDate, $request);
+            $subscriptionData = $this->getDailyTotalSubscriptionsOptimized($startDate, $endDate);
             $mrrData = $this->getDailyMrrEstimate($startDate, $endDate);
         } else {
-            $chartMonths = $this->getChartMonthsForRange($dateRange, $request);
-            [$revenueData, $subscriptionRevenueData, $oneTimeRevenueData, $labels] = $this->getMonthlyRevenue($chartMonths, $startDate, $request);
-            $subscriptionData = $this->getMonthlyTotalSubscriptionsOptimized($chartMonths, $startDate, $request);
+            $chartMonths = $this->getChartMonthsForRange($dateRange);
+            [$revenueData, $subscriptionRevenueData, $oneTimeRevenueData, $labels] = $this->getMonthlyRevenue($chartMonths, $startDate);
+            $subscriptionData = $this->getMonthlyTotalSubscriptionsOptimized($chartMonths, $startDate);
             $mrrData = $this->getMonthlyMrrEstimate($chartMonths, $startDate);
         }
 
@@ -80,44 +79,68 @@ class AdminController extends Controller
     /**
      * Get all metrics data with optimized queries
      */
-    private function getMetrics(Carbon $startDate, Carbon $endDate, Carbon $previousStartDate, Request $request): array
+    private function getMetrics(Carbon $startDate, Carbon $endDate, Carbon $previousStartDate): array
     {
         $startOfYear = Carbon::now()->startOfYear();
 
-        // Revenue from one-time orders (paid)
-        $currentOneTimeRevenueCents = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'one-time')
-            ->whereBetween('ordered_at', [$startDate, $endDate])
-            ->sum('total');
+        $orders = DB::table('lemon_squeezy_orders')
+            ->selectRaw(
+                '
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN total ELSE 0 END) AS current_one_time_revenue_cents,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN total ELSE 0 END) AS previous_one_time_revenue_cents,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN total ELSE 0 END) AS ytd_one_time_revenue_cents,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS current_subscription_orders,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS previous_subscription_orders,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS current_one_time_orders,
+                SUM(CASE WHEN status = ? AND product_type = ? AND ordered_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS previous_one_time_orders
+                ',
+                [
+                    'paid', 'one-time', $startDate, $endDate,
+                    'paid', 'one-time', $previousStartDate, $startDate,
+                    'paid', 'one-time', $startOfYear, $endDate,
+                    'paid', 'subscription', $startDate, $endDate,
+                    'paid', 'subscription', $previousStartDate, $startDate,
+                    'paid', 'one-time', $startDate, $endDate,
+                    'paid', 'one-time', $previousStartDate, $startDate,
+                ]
+            )
+            ->first();
 
-        $previousOneTimeRevenueCents = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'one-time')
-            ->whereBetween('ordered_at', [$previousStartDate, $startDate])
-            ->sum('total');
+        $invoices = DB::table('lemon_squeezy_subscription_invoices')
+            ->selectRaw(
+                '
+                SUM(CASE WHEN status = ? AND invoiced_at BETWEEN ? AND ? THEN total ELSE 0 END) AS current_subscription_revenue_cents,
+                SUM(CASE WHEN status = ? AND invoiced_at BETWEEN ? AND ? THEN total ELSE 0 END) AS previous_subscription_revenue_cents,
+                SUM(CASE WHEN status = ? AND invoiced_at BETWEEN ? AND ? THEN total ELSE 0 END) AS ytd_subscription_revenue_cents
+                ',
+                [
+                    'paid', $startDate, $endDate,
+                    'paid', $previousStartDate, $startDate,
+                    'paid', $startOfYear, $endDate,
+                ]
+            )
+            ->first();
 
-        $ytdOneTimeRevenueCents = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'one-time')
-            ->whereBetween('ordered_at', [$startOfYear, $endDate])
-            ->sum('total');
+        $cancellations = DB::table('lemon_squeezy_subscriptions')
+            ->selectRaw(
+                '
+                SUM(CASE WHEN status = ? AND updated_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS cancelled_subscriptions,
+                SUM(CASE WHEN status = ? AND updated_at BETWEEN ? AND ? THEN 1 ELSE 0 END) AS previous_cancelled_subscriptions
+                ',
+                [
+                    'canceled', $startDate, $endDate,
+                    'canceled', $previousStartDate, $startDate,
+                ]
+            )
+            ->first();
 
-        // Revenue from subscriptions (paid invoices)
-        $currentSubscriptionRevenueCents = DB::table('lemon_squeezy_subscription_invoices')
-            ->where('status', 'paid')
-            ->whereBetween('invoiced_at', [$startDate, $endDate])
-            ->sum('total');
+        $currentOneTimeRevenueCents = (int) ($orders->current_one_time_revenue_cents ?? 0);
+        $previousOneTimeRevenueCents = (int) ($orders->previous_one_time_revenue_cents ?? 0);
+        $ytdOneTimeRevenueCents = (int) ($orders->ytd_one_time_revenue_cents ?? 0);
 
-        $previousSubscriptionRevenueCents = DB::table('lemon_squeezy_subscription_invoices')
-            ->where('status', 'paid')
-            ->whereBetween('invoiced_at', [$previousStartDate, $startDate])
-            ->sum('total');
-
-        $ytdSubscriptionRevenueCents = DB::table('lemon_squeezy_subscription_invoices')
-            ->where('status', 'paid')
-            ->whereBetween('invoiced_at', [$startOfYear, $endDate])
-            ->sum('total');
+        $currentSubscriptionRevenueCents = (int) ($invoices->current_subscription_revenue_cents ?? 0);
+        $previousSubscriptionRevenueCents = (int) ($invoices->previous_subscription_revenue_cents ?? 0);
+        $ytdSubscriptionRevenueCents = (int) ($invoices->ytd_subscription_revenue_cents ?? 0);
 
         $currentRevenueCents = $currentOneTimeRevenueCents + $currentSubscriptionRevenueCents;
         $previousRevenueCents = $previousOneTimeRevenueCents + $previousSubscriptionRevenueCents;
@@ -128,41 +151,15 @@ class AdminController extends Controller
         $ytdRevenue = round($ytdRevenueCents / self::CENTS_TO_DOLLARS, 2);
 
         // New subscriptions come from subscription-type paid orders
-        $newSubscriptions = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'subscription')
-            ->whereBetween('ordered_at', [$startDate, $endDate])
-            ->count();
-
-        $previousSubscriptions = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'subscription')
-            ->whereBetween('ordered_at', [$previousStartDate, $startDate])
-            ->count();
+        $newSubscriptions = (int) ($orders->current_subscription_orders ?? 0);
+        $previousSubscriptions = (int) ($orders->previous_subscription_orders ?? 0);
 
         // New one-time orders (paid)
-        $newOneTimeOrders = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'one-time')
-            ->whereBetween('ordered_at', [$startDate, $endDate])
-            ->count();
+        $newOneTimeOrders = (int) ($orders->current_one_time_orders ?? 0);
+        $previousOneTimeOrders = (int) ($orders->previous_one_time_orders ?? 0);
 
-        $previousOneTimeOrders = DB::table('lemon_squeezy_orders')
-            ->where('status', 'paid')
-            ->where('product_type', 'one-time')
-            ->whereBetween('ordered_at', [$previousStartDate, $startDate])
-            ->count();
-
-        // Cancelled subscriptions for current and previous periods
-        $cancelledSubscriptions = DB::table('lemon_squeezy_subscriptions')
-            ->where('status', 'canceled')
-            ->whereBetween('updated_at', [$startDate, $endDate])
-            ->count();
-
-        $previousCancelledSubscriptions = DB::table('lemon_squeezy_subscriptions')
-            ->where('status', 'canceled')
-            ->whereBetween('updated_at', [$previousStartDate, $startDate])
-            ->count();
+        $cancelledSubscriptions = (int) ($cancellations->cancelled_subscriptions ?? 0);
+        $previousCancelledSubscriptions = (int) ($cancellations->previous_cancelled_subscriptions ?? 0);
 
         // Get user counts for current and previous periods
         $userCounts = User::query()
@@ -216,7 +213,7 @@ class AdminController extends Controller
      *
      * @return array{0: \Carbon\Carbon, 1: \Carbon\Carbon, 2: \Carbon\Carbon} Start date, end date, and previous start date
      */
-    private function getDateRangeDates(string $range, Request $request): array
+    private function getDateRangeDates(string $range): array
     {
         $endDate = Carbon::now()->endOfDay();
 
@@ -318,7 +315,7 @@ class AdminController extends Controller
     /**
      * Get number of months for chart based on date range
      */
-    private function getChartMonthsForRange(string $range, Request $request): int
+    private function getChartMonthsForRange(string $range): int
     {
         return match ($range) {
             'today', 'yesterday' => 1,
@@ -452,7 +449,7 @@ class AdminController extends Controller
      *     3: array<int, string>
      * }
      */
-    private function getMonthlyRevenue(int $numberOfMonths, ?Carbon $startDate, Request $request): array
+    private function getMonthlyRevenue(int $numberOfMonths, ?Carbon $startDate): array
     {
         $start = $startDate
             ? $startDate->copy()->startOfMonth()
@@ -512,9 +509,8 @@ class AdminController extends Controller
      *
      * @return array<int, int> Total active subscription counts per day
      */
-    private function getDailyTotalSubscriptionsOptimized(Carbon $startDate, Carbon $endDate, Request $request): array
+    private function getDailyTotalSubscriptionsOptimized(Carbon $startDate, Carbon $endDate): array
     {
-        // Generate all dates in range
         $dateKeys = [];
         $currentDate = $startDate->copy();
 
@@ -523,32 +519,61 @@ class AdminController extends Controller
             $currentDate->addDay();
         }
 
-        // Get all relevant subscriptions in a single query
-        // Use DB::table to avoid model eager loading
+        if ($dateKeys === []) {
+            return [];
+        }
+
+        // Fetch once, then build an "event" map and a cumulative series:
+        // active(endOfDay[d]) = active(endOfDay[d-1]) + starts[d] - ends[d]
         $subscriptions = DB::table('lemon_squeezy_subscriptions')
             ->select(['created_at', 'ends_at'])
             ->where('created_at', '<=', $endDate)
             ->where('status', 'active')
             ->get();
 
-        // Calculate counts for each date in memory
-        return collect($dateKeys)->map(function ($dateKey) use ($subscriptions) {
-            $date = Carbon::createFromFormat('Y-m-d', $dateKey)->endOfDay();
+        $firstKey = $dateKeys[0];
+        $lastKey = $dateKeys[count($dateKeys) - 1];
+        $firstDayEnd = Carbon::createFromFormat('Y-m-d', $firstKey)->endOfDay();
 
-            return $subscriptions->filter(function ($subscription) use ($date) {
-                // Parse dates as UTC (database stores in UTC)
-                $createdAt = Carbon::parse($subscription->created_at);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
+        $initialActive = 0;
+        $startsByDate = [];
+        $endsByDate = [];
 
-                // Subscription was created before or on this date
-                $createdBeforeDate = $createdAt <= $date;
+        foreach ($subscriptions as $subscription) {
+            $createdAt = Carbon::parse($subscription->created_at);
+            $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
-                // Subscription hasn't ended yet or ends after this date
-                $stillActiveOnDate = $endsAt === null || $endsAt > $date;
+            if ($createdAt <= $firstDayEnd && ($endsAt === null || $endsAt > $firstDayEnd)) {
+                $initialActive++;
+            }
 
-                return $createdBeforeDate && $stillActiveOnDate;
-            })->count();
-        })->values()->toArray();
+            $createdKey = $createdAt->format('Y-m-d');
+            if ($createdKey >= $firstKey && $createdKey <= $lastKey) {
+                $startsByDate[$createdKey] = ($startsByDate[$createdKey] ?? 0) + 1;
+            }
+
+            if ($endsAt !== null) {
+                $endKey = $endsAt->format('Y-m-d');
+                if ($endKey >= $firstKey && $endKey <= $lastKey) {
+                    $endsByDate[$endKey] = ($endsByDate[$endKey] ?? 0) + 1;
+                }
+            }
+        }
+
+        $series = [];
+        $active = $initialActive;
+
+        foreach ($dateKeys as $index => $dateKey) {
+            if ($index === 0) {
+                $series[] = $active;
+                continue;
+            }
+
+            $active += ($startsByDate[$dateKey] ?? 0) - ($endsByDate[$dateKey] ?? 0);
+            $series[] = $active;
+        }
+
+        return $series;
     }
 
     /**
@@ -558,7 +583,7 @@ class AdminController extends Controller
      *
      * @return array<int, int> Total active subscription counts per month
      */
-    private function getMonthlyTotalSubscriptionsOptimized(int $numberOfMonths, ?Carbon $startDate, Request $request): array
+    private function getMonthlyTotalSubscriptionsOptimized(int $numberOfMonths, ?Carbon $startDate): array
     {
         $start = $startDate
             ? $startDate->copy()->startOfMonth()
@@ -569,32 +594,59 @@ class AdminController extends Controller
         // Calculate the last month end date
         $lastMonthEnd = Carbon::createFromFormat('Y-m', end($monthKeys))->endOfMonth();
 
-        // Get all relevant subscriptions in a single query
-        // Use DB::table to avoid model eager loading
+        if ($monthKeys === []) {
+            return [];
+        }
+
         $subscriptions = DB::table('lemon_squeezy_subscriptions')
             ->select(['created_at', 'ends_at'])
             ->where('created_at', '<=', $lastMonthEnd)
             ->where('status', 'active')
             ->get();
 
-        // Calculate counts for each month in memory
-        return collect($monthKeys)->map(function ($monthKey) use ($subscriptions) {
-            $monthEnd = Carbon::createFromFormat('Y-m', $monthKey)->endOfMonth();
+        $firstKey = $monthKeys[0];
+        $lastKey = $monthKeys[count($monthKeys) - 1];
+        $firstMonthEnd = Carbon::createFromFormat('Y-m', $firstKey)->endOfMonth();
 
-            return $subscriptions->filter(function ($subscription) use ($monthEnd) {
-                // Parse dates as UTC (database stores in UTC)
-                $createdAt = Carbon::parse($subscription->created_at);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
+        $initialActive = 0;
+        $startsByMonth = [];
+        $endsByMonth = [];
 
-                // Subscription was created before or at end of this month
-                $createdBeforeMonth = $createdAt <= $monthEnd;
+        foreach ($subscriptions as $subscription) {
+            $createdAt = Carbon::parse($subscription->created_at);
+            $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
-                // Subscription hasn't ended yet or ends after this month
-                $stillActiveInMonth = $endsAt === null || $endsAt > $monthEnd;
+            if ($createdAt <= $firstMonthEnd && ($endsAt === null || $endsAt > $firstMonthEnd)) {
+                $initialActive++;
+            }
 
-                return $createdBeforeMonth && $stillActiveInMonth;
-            })->count();
-        })->values()->toArray();
+            $createdKey = $createdAt->format('Y-m');
+            if ($createdKey >= $firstKey && $createdKey <= $lastKey) {
+                $startsByMonth[$createdKey] = ($startsByMonth[$createdKey] ?? 0) + 1;
+            }
+
+            if ($endsAt !== null) {
+                $endKey = $endsAt->format('Y-m');
+                if ($endKey >= $firstKey && $endKey <= $lastKey) {
+                    $endsByMonth[$endKey] = ($endsByMonth[$endKey] ?? 0) + 1;
+                }
+            }
+        }
+
+        $series = [];
+        $active = $initialActive;
+
+        foreach ($monthKeys as $index => $monthKey) {
+            if ($index === 0) {
+                $series[] = $active;
+                continue;
+            }
+
+            $active += ($startsByMonth[$monthKey] ?? 0) - ($endsByMonth[$monthKey] ?? 0);
+            $series[] = $active;
+        }
+
+        return $series;
     }
 
     /**
@@ -608,13 +660,16 @@ class AdminController extends Controller
      */
     private function getDailyMrrEstimate(Carbon $startDate, Carbon $endDate): array
     {
-        // Generate all dates in range
         $dateKeys = [];
         $currentDate = $startDate->copy();
 
         while ($currentDate <= $endDate) {
             $dateKeys[] = $currentDate->format('Y-m-d');
             $currentDate->addDay();
+        }
+
+        if ($dateKeys === []) {
+            return [];
         }
 
         // Load active subscriptions with their plan prices
@@ -630,38 +685,55 @@ class AdminController extends Controller
             ->where('lemon_squeezy_subscriptions.created_at', '<=', $endDate)
             ->get();
 
-        return collect($dateKeys)->map(function (string $dateKey) use ($subscriptions) {
-            $date = Carbon::createFromFormat('Y-m-d', $dateKey)->endOfDay();
+        $firstKey = $dateKeys[0];
+        $lastKey = $dateKeys[count($dateKeys) - 1];
+        $firstDayEnd = Carbon::createFromFormat('Y-m-d', $firstKey)->endOfDay();
 
-            $totalMonthlyCents = 0;
+        $initialMrrCents = 0;
+        $startsByDateCents = [];
+        $endsByDateCents = [];
 
-            foreach ($subscriptions as $subscription) {
-                $createdAt = Carbon::parse($subscription->created_at);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
+        foreach ($subscriptions as $subscription) {
+            $createdAt = Carbon::parse($subscription->created_at);
+            $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
-                if ($createdAt > $date) {
-                    continue;
-                }
+            $priceCents = (int) $subscription->price;
+            $billingPeriod = $subscription->billing_period;
+            $monthlyEquivalentCents = in_array($billingPeriod, ['year', 'yearly'], true)
+                ? (int) round($priceCents / 12)
+                : $priceCents;
 
-                if ($endsAt !== null && $endsAt <= $date) {
-                    continue;
-                }
-
-                $priceCents = (int) $subscription->price;
-                $billingPeriod = $subscription->billing_period;
-
-                if (in_array($billingPeriod, ['year', 'yearly'], true)) {
-                    $monthlyEquivalentCents = (int) round($priceCents / 12);
-                } else {
-                    // Treat monthly and any other period as monthly for simplicity
-                    $monthlyEquivalentCents = $priceCents;
-                }
-
-                $totalMonthlyCents += $monthlyEquivalentCents;
+            if ($createdAt <= $firstDayEnd && ($endsAt === null || $endsAt > $firstDayEnd)) {
+                $initialMrrCents += $monthlyEquivalentCents;
             }
 
-            return round($totalMonthlyCents / self::CENTS_TO_DOLLARS, 2);
-        })->values()->toArray();
+            $createdKey = $createdAt->format('Y-m-d');
+            if ($createdKey >= $firstKey && $createdKey <= $lastKey) {
+                $startsByDateCents[$createdKey] = ($startsByDateCents[$createdKey] ?? 0) + $monthlyEquivalentCents;
+            }
+
+            if ($endsAt !== null) {
+                $endKey = $endsAt->format('Y-m-d');
+                if ($endKey >= $firstKey && $endKey <= $lastKey) {
+                    $endsByDateCents[$endKey] = ($endsByDateCents[$endKey] ?? 0) + $monthlyEquivalentCents;
+                }
+            }
+        }
+
+        $series = [];
+        $mrrCents = $initialMrrCents;
+
+        foreach ($dateKeys as $index => $dateKey) {
+            if ($index === 0) {
+                $series[] = round($mrrCents / self::CENTS_TO_DOLLARS, 2);
+                continue;
+            }
+
+            $mrrCents += ($startsByDateCents[$dateKey] ?? 0) - ($endsByDateCents[$dateKey] ?? 0);
+            $series[] = round($mrrCents / self::CENTS_TO_DOLLARS, 2);
+        }
+
+        return $series;
     }
 
     /**
@@ -676,6 +748,10 @@ class AdminController extends Controller
             : Carbon::now()->startOfMonth()->subMonths($numberOfMonths - 1);
 
         [$monthKeys] = $this->generateMonthData($numberOfMonths, $start);
+
+        if ($monthKeys === []) {
+            return [];
+        }
 
         // Calculate the last month end date
         $lastMonthEnd = Carbon::createFromFormat('Y-m', end($monthKeys))->endOfMonth();
@@ -693,37 +769,55 @@ class AdminController extends Controller
             ->where('lemon_squeezy_subscriptions.created_at', '<=', $lastMonthEnd)
             ->get();
 
-        return collect($monthKeys)->map(function (string $monthKey) use ($subscriptions) {
-            $monthEnd = Carbon::createFromFormat('Y-m', $monthKey)->endOfMonth();
+        $firstKey = $monthKeys[0];
+        $lastKey = $monthKeys[count($monthKeys) - 1];
+        $firstMonthEnd = Carbon::createFromFormat('Y-m', $firstKey)->endOfMonth();
 
-            $totalMonthlyCents = 0;
+        $initialMrrCents = 0;
+        $startsByMonthCents = [];
+        $endsByMonthCents = [];
 
-            foreach ($subscriptions as $subscription) {
-                $createdAt = Carbon::parse($subscription->created_at);
-                $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
+        foreach ($subscriptions as $subscription) {
+            $createdAt = Carbon::parse($subscription->created_at);
+            $endsAt = $subscription->ends_at ? Carbon::parse($subscription->ends_at) : null;
 
-                if ($createdAt > $monthEnd) {
-                    continue;
-                }
+            $priceCents = (int) $subscription->price;
+            $billingPeriod = $subscription->billing_period;
+            $monthlyEquivalentCents = in_array($billingPeriod, ['year', 'yearly'], true)
+                ? (int) round($priceCents / 12)
+                : $priceCents;
 
-                if ($endsAt !== null && $endsAt <= $monthEnd) {
-                    continue;
-                }
-
-                $priceCents = (int) $subscription->price;
-                $billingPeriod = $subscription->billing_period;
-
-                if (in_array($billingPeriod, ['year', 'yearly'], true)) {
-                    $monthlyEquivalentCents = (int) round($priceCents / 12);
-                } else {
-                    $monthlyEquivalentCents = $priceCents;
-                }
-
-                $totalMonthlyCents += $monthlyEquivalentCents;
+            if ($createdAt <= $firstMonthEnd && ($endsAt === null || $endsAt > $firstMonthEnd)) {
+                $initialMrrCents += $monthlyEquivalentCents;
             }
 
-            return round($totalMonthlyCents / self::CENTS_TO_DOLLARS, 2);
-        })->values()->toArray();
+            $createdKey = $createdAt->format('Y-m');
+            if ($createdKey >= $firstKey && $createdKey <= $lastKey) {
+                $startsByMonthCents[$createdKey] = ($startsByMonthCents[$createdKey] ?? 0) + $monthlyEquivalentCents;
+            }
+
+            if ($endsAt !== null) {
+                $endKey = $endsAt->format('Y-m');
+                if ($endKey >= $firstKey && $endKey <= $lastKey) {
+                    $endsByMonthCents[$endKey] = ($endsByMonthCents[$endKey] ?? 0) + $monthlyEquivalentCents;
+                }
+            }
+        }
+
+        $series = [];
+        $mrrCents = $initialMrrCents;
+
+        foreach ($monthKeys as $index => $monthKey) {
+            if ($index === 0) {
+                $series[] = round($mrrCents / self::CENTS_TO_DOLLARS, 2);
+                continue;
+            }
+
+            $mrrCents += ($startsByMonthCents[$monthKey] ?? 0) - ($endsByMonthCents[$monthKey] ?? 0);
+            $series[] = round($mrrCents / self::CENTS_TO_DOLLARS, 2);
+        }
+
+        return $series;
     }
 
 }

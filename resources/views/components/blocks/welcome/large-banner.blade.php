@@ -28,7 +28,7 @@
     ];
 @endphp
 
-<div {{ $attributes->merge(['class' => 'p-8']) }}>
+<div {{ $attributes->merge(['class' => 'p-2 mt-2 md:mt-0 md:p-8']) }}>
 
     <div class="relative mx-auto w-full max-w-2xl xl:max-w-4xl" x-data="{
         lightImages: @js($lightImages),

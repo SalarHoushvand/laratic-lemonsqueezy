@@ -1,22 +1,13 @@
 <div {{ $attributes }}>
-    <div class="flex flex-col justify-center items-center gap-4">
-        <h2 class="heading-3 text-center max-w-xl">
-            {{ __('Everything You Need') }}
-        </h2>
-        <div class="flex items-center justify-center gap-2">
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-            <div class="size-2 bg-primary dark:bg-primary-dark rounded-full"></div>
-        </div>
-        <p class="text-center max-w-md text-on-surface-muted dark:text-on-surface-dark-muted">
-            {{ __('Features that will help you ship your SaaS application faster.') }}
-        </p>
-    </div>
+    <x-typography.guest-page-header
+        title="{{ __('Everything You Need') }}"
+        description="{{ __('Features that will help you ship your SaaS application faster.') }}"
+        size="h2"
+        :divider-dots="true" />
+    
 
-    <div class="mt-12 max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+    <div class="mt-6 md:mt-12 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             <!-- Authentication -->
             <div
                 class="bg-surface-alt/20 dark:bg-surface-dark-alt/20 rounded-radius p-6 border border-outline dark:border-outline-dark">
