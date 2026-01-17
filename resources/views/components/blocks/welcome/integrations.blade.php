@@ -17,7 +17,7 @@
         'lemon-squeezy' => ['name' => 'Lemon Squeezy', 'url' => 'https://www.lemonsqueezy.com'],
         'paddle' => ['name' => 'Paddle', 'url' => 'https://paddle.com'],
         'penguin' => ['name' => 'Penguin UI', 'url' => 'https://penguinui.com'],
-        'vonage' => ['name' => 'Vonage', 'url' => 'https://www.vonage.com'],
+        'stripe' => ['name' => 'Stripe', 'url' => 'https://stripe.com'],
     ] as $logo => $data)
                 <a href="{{ $data['url'] }}"
                     target="_blank"

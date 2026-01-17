@@ -44,6 +44,7 @@ class SubscriptionInvoicesTable extends Component
         /** @var User $user */
         $user = Auth::user();
         $invoices = SubscriptionInvoice::where('billable_id', $user->id)
+            ->where('billable_type', User::class)
             ->when($this->search, function ($query, $search) {
                 $trimmedSearch = trim($search);
                 $query->where('lemon_squeezy_id', 'like', "%{$trimmedSearch}%");

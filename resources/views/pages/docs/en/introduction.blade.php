@@ -22,7 +22,7 @@
     <ul class="space-y-2">
         <li><strong>Authentication System</strong> - Complete user authentication with email/password, two-factor verification, and social login (Google, GitHub)</li>
         <li><strong>Two-Factor Authentication</strong> - Enhanced security with 2FA support via email</li>
-        <li><strong>Subscription Management</strong> - Full subscription and one-time payment management with Paddle & Lemonsqueezy integration (Depending on your bundle)</li>
+        <li><strong>Subscription Management</strong> - Full subscription and one-time payment management with LemonSqueezy integration</li>
         <li><strong>Admin Dashboard</strong> - Comprehensive admin dashboard with analytics, user management, and more</li>
         <li><strong>AI-Powered Features</strong> - Interactive AI chat with streaming responses and AI-powered blog content generation</li>
         <li><strong>Blog & Post System</strong> - Complete blog management platform with markdown support, tags, and categories and AI-powered blog content generation and translation</li>
@@ -61,7 +61,6 @@
 
     <h3>Key Packages & Integrations</h3>
     <ul class="space-y-2">
-        <li><strong>Laravel Cashier Paddle</strong> - ^2.5 (subscription and payment management)</li>
         <li><strong>Laravel Socialite</strong> - ^5.23 (social authentication)</li>
         <li><strong>Spatie Laravel Permission</strong> - ^6.17 (role and permission management)</li>
         <li><strong>Spatie Laravel Tags</strong> - ^4.10 (tagging system)</li>

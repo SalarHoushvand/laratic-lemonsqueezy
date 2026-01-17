@@ -13,7 +13,7 @@
                 rel="noopener noreferrer">{{ __('Privacy Policy') }}</a>
         @endif
     </span>
-    <div class="gap-2 flex-shrink-0 flex flex-col md:flex-row items-stretch md:items-center pb-2 md:pb-0">
+    <div class="gap-2 flex-shrink-0 flex items-stretch md:items-center pb-2 md:pb-0">
         <x-button size="sm" variant="outline" x-on:click="decline()" :aria-label="__('Decline cookies')">
             {{ __('Decline') }}
         </x-button>

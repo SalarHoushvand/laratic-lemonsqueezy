@@ -115,7 +115,7 @@ CONTACT_EMAIL=your@contact.email</code></pre>
         Sent to the customer when their order payment is successfully processed.
     </p>
     <p><strong>Class:</strong> <code>App\Notifications\OrderPaidNotification</code></p>
-    <p><strong>When it's sent:</strong> Automatically when a Paddle transaction is completed and the order is marked as
+    <p><strong>When it's sent:</strong> Automatically when a LemonSqueezy transaction is completed and the order is marked as
         paid.</p>
     <p><strong>Template:</strong> <code>resources/views/emails/order-paid.blade.php</code></p>
     <p><strong>Usage:</strong></p>
@@ -126,7 +126,7 @@ CONTACT_EMAIL=your@contact.email</code></pre>
         Sent to all admin users when an order payment is successfully processed.
     </p>
     <p><strong>Class:</strong> <code>App\Notifications\OrderPaidAdminNotification</code></p>
-    <p><strong>When it's sent:</strong> Automatically when a Paddle transaction is completed and the order is marked as
+    <p><strong>When it's sent:</strong> Automatically when a LemonSqueezy transaction is completed and the order is marked as
         paid.</p>
     <p><strong>Template:</strong> <code>resources/views/emails/order-paid-admin.blade.php</code></p>
     <p><strong>Usage:</strong></p>
@@ -158,8 +158,7 @@ $user->notify(new WelcomeNotification);</code></pre>
     <ul>
         <li><strong>Welcome Notification:</strong> Sent via <code>App\Listeners\SendWelcomeNotification</code> when the
             <code>Registered</code> event fires.</li>
-        <li><strong>Order Paid Notifications:</strong> Sent in <code>handle_paddle_transaction_completed()</code> when a
-            Paddle webhook processes a payment.</li>
+        <li><strong>Order Paid Notifications:</strong> Sent when a LemonSqueezy webhook processes a payment.</li>
     </ul>
 
 </x-layouts.docs>

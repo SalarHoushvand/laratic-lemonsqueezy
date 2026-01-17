@@ -5,10 +5,16 @@ namespace App\Livewire\Settings;
 use App\Support\TwoFactor as TwoFactorService;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class TwoFactor extends Component
 {
+    /**
+     * Session key used to track if user has passed 2FA verification.
+     */
+    private const SESSION_KEY = '2fa_passed';
+
     public string $verification_code = '';
 
     public string $password = '';
@@ -19,6 +25,25 @@ class TwoFactor extends Component
     public function mount(): void
     {
         // No initialization required for email-based 2FA.
+    }
+
+    /**
+     * Get the masked email address for display.
+     */
+    public function getMaskedEmailProperty(): string
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if (! $user || ! $user->email) {
+            return '';
+        }
+
+        $emailParts = explode('@', $user->email);
+        $localPart = $emailParts[0];
+        $domain = $emailParts[1] ?? '';
+
+        return substr($localPart, 0, 1).str_repeat('*', max(3, strlen($localPart) - 1)).'@'.$domain;
     }
 
     /**
@@ -92,6 +117,9 @@ class TwoFactor extends Component
         $user->two_factor_enabled = true;
         $user->save();
 
+        // User just verified a code, so don't force 2FA again until next login.
+        Session::put(self::SESSION_KEY, true);
+
         // Close modal and reset
         $this->dispatch('close-modal');
         $this->verification_code = '';
@@ -163,7 +191,7 @@ class TwoFactor extends Component
         $user->two_factor_enabled = false;
         $user->save();
 
-        $this->phone = '';
+        Session::forget(self::SESSION_KEY);
         $this->password = '';
         $this->dispatch('close-modal');
 

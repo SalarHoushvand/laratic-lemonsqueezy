@@ -81,7 +81,7 @@
         <!-- Bottom Navigation -->
         <ul class="mt-auto flex flex-col gap-2">
             <li>
-                <x-sidebar-link href="{{ route('docs.show', 'getting-started') }}" :active="request()->routeIs('docs.show')">
+                <x-sidebar-link href="{{ route('docs.show', 'installation') }}" :active="request()->routeIs('docs.show')">
                     <x-icons.book-open-text />
                     <span>{{ __('Documentation') }}</span>
                 </x-sidebar-link>

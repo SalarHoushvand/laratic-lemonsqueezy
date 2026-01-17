@@ -61,14 +61,14 @@
     <p>You can use Laravel's named routes:</p>
     <pre><code class="language-html">&lt;x-breadcrumb :items="[
     ['label' => 'Home', 'url' => route('home')],
-    ['label' => 'Docs', 'url' => route('docs.show', ['topic' => 'getting-started'])],
+    ['label' => 'Docs', 'url' => route('docs.show', ['topic' => 'installation'])],
     ['label' => 'Components', 'url' => '#']
 ]" /&gt;</code></pre>
 
     <div class="my-6 not-prose">
         <x-breadcrumb :items="[
             ['label' => 'Home', 'url' => route('home')],
-            ['label' => 'Docs', 'url' => route('docs.show', ['topic' => 'getting-started'])],
+            ['label' => 'Docs', 'url' => route('docs.show', ['topic' => 'installation'])],
             ['label' => 'Components', 'url' => '#']
         ]" />
     </div>

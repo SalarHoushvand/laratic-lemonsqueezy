@@ -57,7 +57,11 @@
 
         <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-4">
             <p class="text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('We will send a verification code to your primary email address.') }}
+                @if ($this->maskedEmail)
+                    {{ __('We will send a verification code to :email.', ['email' => $this->maskedEmail]) }}
+                @else
+                    {{ __('We will send a verification code to your primary email address.') }}
+                @endif
             </p>
         </div>
 
@@ -83,7 +87,11 @@
 
         <div class="space-y-3 sm:space-y-4 px-4 sm:px-6 py-2">
             <p class="text-xs sm:text-sm text-on-surface dark:text-on-surface-dark">
-                {{ __('We\'ve sent a 6-digit verification code to your email address.') }}
+                @if ($this->maskedEmail)
+                    {{ __('We\'ve sent a 6-digit verification code to :email.', ['email' => $this->maskedEmail]) }}
+                @else
+                    {{ __('We\'ve sent a 6-digit verification code to your email address.') }}
+                @endif
             </p>
 
             <div class="flex flex-col gap-1">

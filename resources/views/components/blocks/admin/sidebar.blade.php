@@ -133,7 +133,7 @@
                 </x-sidebar-link>
             </li>
             <li>
-                <x-sidebar-link href="{{ route('docs.show', 'getting-started') }}">
+                <x-sidebar-link href="{{ route('docs.show', 'installation') }}">
                     <x-icons.book-open-text />
                     <span>{{ __('Documentation') }}</span>
                 </x-sidebar-link>

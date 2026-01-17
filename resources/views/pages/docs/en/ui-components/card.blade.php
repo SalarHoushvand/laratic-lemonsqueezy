@@ -75,7 +75,7 @@
         'price' => 999,
         'currency' => 'USD',
         'billing_period' => 'month',
-        'paddle_id' => 'pri_123',
+        'lemon_squeezy_variant_id' => 'var_123',
         'features' => [
             'Up to 10 active projects with full access to core features',
             '5GB of secure cloud storage for your files',
@@ -94,7 +94,7 @@
             'price' => 999,
             'currency' => 'USD',
             'billing_period' => 'month',
-            'paddle_id' => 'pri_123',
+            'lemon_squeezy_variant_id' => 'var_123',
             'features' => [
                 'Up to 10 active projects with full access to core features',
                 '5GB of secure cloud storage for your files',
@@ -116,7 +116,7 @@
         'currency' => 'USD',
         'billing_period' => 'month',
         'is_featured' => true,
-        'paddle_id' => 'pri_456',
+        'lemon_squeezy_variant_id' => 'var_456',
         'features' => [
             'Unlimited projects with access to all premium features',
             '100GB of secure cloud storage for your files and data',
@@ -133,7 +133,7 @@
             'currency' => 'USD',
             'billing_period' => 'month',
             'is_featured' => true,
-            'paddle_id' => 'pri_456',
+            'lemon_squeezy_variant_id' => 'var_456',
             'features' => [
                 'Unlimited projects with access to all premium features',
                 '100GB of secure cloud storage for your files and data',
@@ -153,7 +153,7 @@
         'billing_period' => 'month',
         'trial_period' => 14,
         'trial_interval' => 'day',
-        'paddle_id' => 'pri_789',
+        'lemon_squeezy_variant_id' => 'var_789',
         'features' => [
             'Unlimited everything with no restrictions on usage',
             'Dedicated support with a personal account manager',
@@ -171,7 +171,7 @@
             'billing_period' => 'month',
             'trial_period' => 14,
             'trial_interval' => 'day',
-            'paddle_id' => 'pri_789',
+            'lemon_squeezy_variant_id' => 'var_789',
             'features' => [
                 'Unlimited everything with no restrictions on usage',
                 'Dedicated support with a personal account manager',
@@ -439,10 +439,10 @@
                 <td>Show "Most Popular" badge and special styling</td>
             </tr>
             <tr>
-                <td><code>paddle_id</code></td>
+                <td><code>lemon_squeezy_variant_id</code></td>
                 <td>string</td>
                 <td>No</td>
-                <td>Paddle price ID (used if href not provided)</td>
+                <td>LemonSqueezy variant ID (used if href not provided)</td>
             </tr>
             <tr>
                 <td><code>href</code></td>

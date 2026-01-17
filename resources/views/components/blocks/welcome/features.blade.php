@@ -272,7 +272,7 @@
                     <span class="text-primary dark:text-primary-dark">{{ __('Payment') }}</span> {{ __('System') }}
                 </h3>
                 <p class=" text-on-surface-muted dark:text-on-surface-dark-muted">
-                    {{ __('Support subscriptions and one-time purchases with the built-in Paddle payment system.') }}
+                    {{ __('Support subscriptions and one-time purchases with the built-in LemonSqueezy payment system.') }}
                 </p>
             </div>
             <ul class="space-y-2 text-sm md:text-base text-left list-disc list-inside marker:text-primary dark:marker:text-primary-dark">

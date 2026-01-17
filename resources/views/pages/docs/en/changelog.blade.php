@@ -13,29 +13,28 @@
     <div class="mt-6 space-y-12">
         {{-- Version 1.2.0 --}}
         <x-blocks.docs.changelog-section 
-        :title="now()->subDays(7)->format('F j, Y')" version="1.2.0" github="#">
+        title="January 10, 2026" version="1.2.0" github="#">
             <x-slot:new>
                 <ul class="space-y-1.5 text-sm">
-                    <li>Enhanced admin dashboard with new revenue analytics widget</li>
-                    <li>Real-time notification system with toast alerts</li>
-                    <li>Advanced filtering options for blog posts and products</li>
+                    <li>Added AI translation functionality to blog posts and products</li>
+                    <li>Can generate translations for blog posts and products with AI</li>
                 </ul>
-                <img src="{{ asset('images/admin-dashboard-dark.webp') }}" alt="Enhanced Admin Dashboard" class="w-full border-0!" />
+                <img src="{{ asset('images/ai-translation-dark.webp') }}" alt="Enhanced Admin Dashboard" class="w-full border-0!" />
                 <div
                     class="p-3 bg-surface-container-low dark:bg-surface-container-low-dark text-sm text-on-surface-weak dark:text-on-surface-dark-weak">
-                    New admin dashboard with improved analytics and user insights
+                    New AI translation functionality for blog posts and products
                 </div>
             </x-slot:new>
             <x-slot:changed>
                 <ul class="space-y-1.5 text-sm">
-                    <li>Resolved issue with dark mode toggle persistence</li>
-                    <li>Fixed pagination on mobile devices</li>
+                    <li>Resolved issue with AI translation not working</li>
+                    <li>Fixed issue with AI translation not working</li>
                 </ul>
             </x-slot:changed>
             <x-slot:fixed>
                 <ul class="space-y-1.5 text-sm">
-                    <li>Resolved issue with dark mode toggle persistence</li>
-                    <li>Fixed pagination on mobile devices</li>
+                    <li>Resolved issue with AI translation not working</li>
+                    <li>Fixed issue with AI translation not working</li>
                 </ul>
             </x-slot:fixed>
         </x-blocks.docs.changelog-section>
@@ -44,40 +43,40 @@
         <x-blocks.docs.changelog-section :title="now()->addDays(7)->format('F j, Y')" version="1.1.0" github="#">
             <x-slot:new>
                     <ul class="space-y-1.5 text-sm">
-                        <li>New reusable notification component for Livewire</li>
-                        <li>Enhanced form validation with real-time feedback</li>
-                        <li>API rate limiting for AI endpoints</li>
+                        <li>Added subscription middleware to protect routes</li>
+                        <li>Can protect routes with subscription middleware</li>
+                        <li>Can protect routes with specific price IDs</li>
                     </ul>
 
                     <div class="mt-4">
-                        <p class="text-sm mb-2">Example of the new notification component:</p>
+                        <p class="text-sm mb-2">Example of middleware usage:</p>
                         <pre class="bg-surface-container-low dark:bg-surface-container-low-dark p-4 rounded-lg overflow-x-auto text-sm"><code class="language-php">// In your Livewire component
-use Livewire\Component;
+// Protect premium features with specific price IDs
+Route::middleware(['auth', 'subscribed:pri_premium_monthly,pri_premium_yearly'])->group(function () {
+    Route::get('/ai-chat', [AiController::class, 'index'])->name('ai.chat');
+    Route::get('/advanced-analytics', [AnalyticsController::class, 'advanced']);
+});
 
-class UserProfile extends Component
-{
-    public function updateProfile()
-    {
-        // Validation logic...
-        
-        $this->dispatch('notify', [
-            'type' => 'success',
-            'message' => 'Profile updated successfully!'
-        ]);
-    }
-}</code></pre>
+// Protect enterprise features
+Route::get('/enterprise-dashboard', [EnterpriseController::class, 'dashboard'])
+    ->middleware(['auth', 'subscribed:pri_enterprise_monthly']);
+
+// Any subscription required
+Route::middleware('subscribed')->group(function () {
+    Route::livewire('/subscription', Manage::class)->name('subscription.manage');
+});</code></pre>
                     </div>
             </x-slot:new>
             <x-slot:changed>
                     <ul class="space-y-1.5 text-sm">
-                        <li>Refactored authentication middleware for better performance</li>
-                        <li>Updated AI token usage tracking algorithm</li>
+                        <li>Refactored subscription middleware for better performance</li>
+                        <li>Updated subscription middleware to handle multiple price IDs</li>
                     </ul>
             </x-slot:changed>
             <x-slot:fixed>
                     <ul class="space-y-1.5 text-sm">
-                        <li>Fixed memory leak in AI streaming responses</li>
-                        <li>Corrected timezone handling in user settings</li>
+                        <li>Fixed issue with subscription middleware not working</li>
+                        <li>Fixed issue with subscription middleware not working</li>
                     </ul>
             </x-slot:fixed>
         </x-blocks.docs.changelog-section>

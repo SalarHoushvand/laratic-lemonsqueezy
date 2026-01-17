@@ -328,6 +328,7 @@
   "results": "resultados",
   "Go to page :page": "Ir a la página :page",
   "Your Email": "Tu correo electrónico",
+  "Email 2FA": "2FA por correo electrónico",
   "Join Waitlist": "Unirse a la lista de espera",
   "I agree to receive the newsletter and accept the <a href=\":privacy_url\" class=\"dark:text-primary-dark hover:opacity-75 text-primary\" target=\"_blank\">Privacy Policy</a>.": "Acepto recibir el boletín y acepto la <a href=\":privacy_url\" class=\"dark:text-primary-dark hover:opacity-75 text-primary\" target=\"_blank\">Política de Privacidad</a>.",
   "You'll be notified when :app is launched": "Se te notificará cuando :app sea lanzado",

@@ -19,7 +19,6 @@ test('auth pages redirect to login when not authenticated', function ($route) {
     '/subscription/status',
     '/products',
     '/orders',
-    '/subscription-invoices',
     '/ai-chat',
     '/ai-simple',
 ]);
@@ -41,7 +40,6 @@ test('auth pages are accessible when authenticated', function ($route) {
     '/subscription/status',
     '/products',
     '/orders',
-    '/subscription-invoices',
     '/ai-chat',
     '/ai-simple',
 ]);

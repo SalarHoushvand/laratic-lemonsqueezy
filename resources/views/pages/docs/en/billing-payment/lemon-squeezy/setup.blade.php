@@ -8,7 +8,7 @@
 
     <h1>Lemon Squeezy Setup</h1>
     <p class="text-on-surface-muted dark:text-on-surface-dark-muted">
-        There are some differences between the Lemon Squeezy setup and the Paddle setup. This guide explains how to configure Lemon Squeezy in {{ config('app.name') }}.
+        This guide explains how to configure Lemon Squeezy in {{ config('app.name') }}.
     </p>
 
     <h2>1. Create Lemon Squeezy Account</h2>

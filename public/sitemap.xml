@@ -69,7 +69,7 @@
     <priority>0.6</priority>
             </url>
     <url>
-    <loc>http://localhost/docs/en/getting-started</loc>
+    <loc>http://localhost/docs/en/heroku-deployment</loc>
     <priority>0.6</priority>
             </url>
     <url>
@@ -85,31 +85,11 @@
     <priority>0.6</priority>
             </url>
     <url>
-    <loc>http://localhost/docs/en/paddle-orders</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
-    <loc>http://localhost/docs/en/paddle-products</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
-    <loc>http://localhost/docs/en/paddle-setup</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
-    <loc>http://localhost/docs/en/paddle-subscriptions</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
-    <loc>http://localhost/docs/en/paddle-webhooks</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
-    <loc>http://localhost/docs/en/sending-text-messages</loc>
-    <priority>0.6</priority>
-            </url>
-    <url>
     <loc>http://localhost/docs/en/sitemap</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/tests</loc>
     <priority>0.6</priority>
             </url>
     <url>
@@ -154,6 +134,26 @@
             </url>
     <url>
     <loc>http://localhost/docs/en/auth/social-login/google</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/billing-payment/lemon-squeezy/orders</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/billing-payment/lemon-squeezy/products</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/billing-payment/lemon-squeezy/setup</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/billing-payment/lemon-squeezy/subscriptions</loc>
+    <priority>0.6</priority>
+            </url>
+    <url>
+    <loc>http://localhost/docs/en/billing-payment/lemon-squeezy/webhooks</loc>
     <priority>0.6</priority>
             </url>
     <url>
@@ -419,8 +419,8 @@
     <priority>0.7</priority>
             </url>
     <url>
-    <loc>http://localhost/blog/exploring-germanys-majestic-national-parks-natures-untamed-paradise</loc>
-    <lastmod>2025-11-25T22:20:17+00:00</lastmod>
+    <loc>http://localhost/blog/pedaling-through-calm-notes-from-amsterdams-canals-1</loc>
+    <lastmod>2025-11-16T00:22:43+00:00</lastmod>
     <priority>0.7</priority>
             </url>
 </urlset>
