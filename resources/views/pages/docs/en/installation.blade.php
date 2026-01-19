@@ -10,9 +10,7 @@
     <p>Follow these steps to install Laratic on your system.</p>
 
     <h2>1. Extract the Archive</h2>
-    <p>Once you download the Laratic zip file, extract it and navigate into the folder:</p>
-    <pre><code class="language-bash">unzip laratic.zip
-cd laratic</code></pre>
+    <p>Once you download the Laratic zip file, extract it and navigate into the folder, you can rename the folder to anything you want.</p>
 
     <h2>2. Install PHP Dependencies</h2>
     <p>Install all required PHP packages using Composer:</p>
