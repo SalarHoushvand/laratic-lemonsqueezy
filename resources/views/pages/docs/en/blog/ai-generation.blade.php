@@ -21,7 +21,7 @@
 
     <p
         class="text-sm text-on-surface-muted dark:text-on-surface-dark-muted my-6 rounded-radius border border-warning/50 bg-warning/10 p-4 dark:bg-warning/5">
-        Before using AI content generation, you need to set up Prism and have an OpenAI API key configured.
+        Before using AI content generation, you need to configure the Laravel AI SDK and have an OpenAI API key set.
         Please see <a href="{{ route('docs.show', ['topic' => 'ai/index']) }}">AI Integration</a> for more details.
     </p>
 
@@ -34,8 +34,8 @@
         <li>Live wire components dispatches a <code>GeneratePostWithAi</code> job to the <code>ai</code> queue</li>
         <li>The job will recive the prompt input and adds more details to the prompt to generate a more accurate post
         </li>
-        <li>The job generates structured post content (title, description, content) using OpenAI via Prism</li>
-        <li>The job will generate a cover image using DALL-E 3 via Prism, you can change the model in the job</li>
+        <li>The job generates structured post content (title, description, content) using OpenAI via the Laravel AI SDK</li>
+        <li>The job will generate a cover image using DALL-E 3 via the Laravel AI SDK, you can change the model in the job</li>
         <li>The job automatically creates a draft post (unpublished by default) with the generated content and saves it
         </li>
         <li>AI usage is tracked and linked to the created post</li>
@@ -58,18 +58,18 @@
 
 
 
-    <p>The system uses Prism's structured output feature to generate well-formed blog posts:</p>
+    <p>The system uses the Laravel AI SDK's structured output feature via <code>BlogPostAgent</code> to generate well-formed blog posts:</p>
 
-    <pre><code class="language-php">$schema = new ObjectSchema(
-        name: 'blog_post',
-        description: 'A structured blog post payload',
-        properties: [
-            new StringSchema('title', 'Compelling H1 title for the blog post'),
-            new StringSchema('description', '1-2 sentence summary/teaser for the post, should be 200 characters or less'),
-            new StringSchema('content', 'Full blog post body in well formatted Markdown'),
-        ],
-        requiredFields: ['title', 'description', 'content']
-    );</code></pre>
+    <pre><code class="language-php">$response = (new BlogPostAgent)->prompt(
+    $fullPrompt,
+    provider: Lab::OpenAI,
+    model: $this->model,
+    timeout: $this->timeout
+);
+
+$title   = $response['title'];
+$description = $response['description'];
+$content = $response['content'];</code></pre>
 
 
     <h2>Image Generation</h2>
@@ -82,15 +82,14 @@
     <p>The system automatically generates cover images using DALL-E 3. The generation process:</p>
     <ul>
         <li>Creates a hyper-realistic image based on the post topic</li>
-        <pre><code class="language-php">$response = Prism::image()
-            ->using('openai', 'dall-e-3')
-            ->withPrompt('Create a hyper-realistic image for: ' . $userPrompt . '. No text. not too much details. low intensity.')
-            ->withProviderOptions([
-                'size' => '1024x1024',
-                'quality' => 'standard',
-                'style' => 'vivid',
-            ])
-            ->generate();
+        <pre><code class="language-php">$imageResponse = Image::of($userPrompt)
+    ->square()
+    ->quality('medium')
+    ->timeout($this->timeout)
+    ->generate(provider: Lab::OpenAI, model: 'dall-e-3');
+
+$generatedImage = $imageResponse->firstImage();
+$dataUri = 'data:' . $generatedImage->mime() . ';base64,' . $generatedImage->image;
         </code></pre>
         <li>Uploads the generated image to Cloudinary for hosting</li>
         <pre><code class="language-php">  $uploadResult = Cloudinary::uploadApi()->upload($imageUrl, [

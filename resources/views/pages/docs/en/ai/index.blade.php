@@ -8,14 +8,14 @@
 
     <h1>AI Integration</h1>
     <p>{{ app('config')['app.name'] }} provides some usefull AI integrations to help you get started with implementing
-        AI in your application. We are using <a href="https://prismphp.com/" target="_blank">Prism PHP</a> to power our AI
+        AI in your application. We are using <a href="https://laravel.com/docs/ai-sdk" target="_blank">Laravel AI SDK</a> to power our AI
         integrations.</p>
 
     <h2>Requirements</h2>
     <p>To use the AI integrations, ensure the following:</p>
     <ul>
-        <li>Prism PHP is installed, please refer to the <a href="https://prismphp.com/getting-started/installation.html"
-                target="_blank">Prism PHP documentation</a> for installation instructions.</li>
+        <li>Laravel AI SDK is installed. Refer to the <a href="https://laravel.com/docs/ai-sdk"
+                target="_blank">Laravel AI SDK documentation</a> for details.</li>
         <li>
             OpenAI API key is set in your <code>.env</code> file:
             <pre><code class="language-ini">OPENAI_API_KEY=your-openai-api-key

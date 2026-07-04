@@ -67,7 +67,7 @@
         <li><strong>Spatie Laravel Newsletter</strong> - ^5.3 (newsletter management)</li>
         <li><strong>Spatie Laravel Sitemap</strong> - ^7.3 (sitemap generation)</li>
         <li><strong>Cloudinary Laravel</strong> - ^3.0 (image and media management)</li>
-        <li><strong>Prism PHP</strong> - ^0.96.1 (AI integration)</li>
+        <li><strong>Laravel AI SDK</strong> - ^0.8 (AI integration)</li>
         <li><strong>Symfony Mailgun Mailer</strong> - ^7.3 (email delivery)</li>
     </ul>
 

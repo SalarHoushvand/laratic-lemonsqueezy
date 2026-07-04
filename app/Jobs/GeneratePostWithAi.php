@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Ai\Agents\BlogPostAgent;
 use App\Models\Post;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,10 +11,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Prism\Prism\Enums\Provider;
-use Prism\Prism\Prism;
-use Prism\Prism\Schema\ObjectSchema;
-use Prism\Prism\Schema\StringSchema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Laravel\Ai\Enums\Lab;
+use Laravel\Ai\Image;
+use Laravel\Ai\Responses\StructuredAgentResponse;
 use RuntimeException;
 
 /**
@@ -36,7 +37,7 @@ class GeneratePostWithAi implements ShouldQueue
     /**
      * OpenAI model to use for the image generation.
      */
-    public string $imageModel = 'dall-e-3';
+    public string $imageModel = 'gpt-image-1';
 
     /**
      * Timeout for the AI generation in seconds.
@@ -89,49 +90,20 @@ class GeneratePostWithAi implements ShouldQueue
 
             $imageUrl = $this->generateImage($userPrompt, $usageIds);
 
-            $schema = new ObjectSchema(
-                name: 'blog_post',
-                description: 'A structured blog post payload',
-                properties: [
-                    new StringSchema('title', 'Compelling H1 title for the blog post'),
-                    new StringSchema('description', '1-2 sentence summary/teaser for the post, should be 200 characters or less'),
-                    new StringSchema('content', 'Full blog post body in well formatted Markdown'),
-                ],
-                requiredFields: ['title', 'description', 'content']
+            $fullPrompt = "{$userPrompt}\n\n"
+                .'Write a blog post (~1200-1800 words) with a clear narrative arc. '
+                .'Description must be 200 characters or less.';
+
+            $response = (new BlogPostAgent)->prompt(
+                $fullPrompt,
+                provider: Lab::OpenAI,
+                model: $this->model,
+                timeout: $this->timeout
             );
 
-            $response = Prism::structured()
-                ->using(Provider::OpenAI, $this->model)
-                ->withSchema($schema)
-                ->withSystemPrompt(
-                    'You are a travel and Laravel web development blog writer. Write in story like 
-                    but simple and natural English some very short and interesting code snippets, if required, 
-                    and are related to the destination or the topic of the post. '.
-                        'No buzzwords, corporate tone, or self-references. Use clear transitions between sections.'
-                )
-                ->withPrompt(
-                    "{$userPrompt}\n\n".
-                        'Write a blog post (~1200-1800 words) with a clear narrative arc. '.
+            assert($response instanceof StructuredAgentResponse);
 
-                        'Description must be 200 characters or less.'
-                )
-                ->withProviderOptions([
-                    'schema' => [
-                        'strict' => true,
-                    ],
-                ])
-                ->withClientOptions([
-                    'timeout' => $this->timeout,
-                ])
-                ->asStructured();
-
-            if ($response->structured === null) {
-                throw new RuntimeException('AI did not return structured data. Please try again.');
-            }
-
-            $data = $response->structured;
-
-            if (! isset($data['title'], $data['description'], $data['content'])) {
+            if (! isset($response['title'], $response['description'], $response['content'])) {
                 throw new RuntimeException('Structured response missing required fields.');
             }
 
@@ -141,10 +113,10 @@ class GeneratePostWithAi implements ShouldQueue
             $usageIds[] = $textGenerationUsage->id;
 
             $post = Post::create([
-                'title' => (string) $data['title'],
-                'description' => (string) $data['description'],
-                'content' => (string) $data['content'],
-                'image_url' => $imageUrl ?? null,
+                'title' => (string) $response['title'],
+                'description' => (string) $response['description'],
+                'content' => (string) $response['content'],
+                'image_url' => $imageUrl ?: null,
                 'author' => 'Laratic Team',
                 'language' => 'en',
                 'is_active' => false,
@@ -165,73 +137,52 @@ class GeneratePostWithAi implements ShouldQueue
     }
 
     /**
-     * Generate a cover image using AI and upload it to Cloudinary.
+     * Generate a cover image using AI and upload it to S3.
      *
-     * Attempts to generate an image using DALL-E with retry logic. If successful,
-     * uploads the image (URL or base64) to Cloudinary and returns the secure URL.
+     * Attempts to generate an image using gpt-image-1 with retry logic. If successful,
+     * uploads the image to S3 and returns the public URL.
      * Tracks AI usage for billing purposes.
      *
      * @param  string  $userPrompt  The prompt to use for image generation
      * @param  array<int>  $usageIds  Array reference to collect AI usage IDs
-     * @return string The Cloudinary secure URL of the uploaded image, or empty string on failure
+     * @return string The S3 public URL of the uploaded image, or empty string on failure
      */
     protected function generateImage(string $userPrompt, array &$usageIds): string
     {
-        $maxAttempts = $this->maxAttempts;
         $attempt = 0;
 
-        while ($attempt < $maxAttempts) {
+        while ($attempt < $this->maxAttempts) {
             $attempt++;
 
             try {
-                $response = Prism::image()
-                    ->using('openai', $this->imageModel)
-                    ->withPrompt(
-                        'Hyper-realistic photograph, 
-                        soft light, Canon EOS R5 and 50mm f/1.2 lens,
-                        detailed textures, extremely sharp realism, shallow depth of field. subject: '.
-                            $userPrompt.
-                            '. No text. Not too much details or too many items.'
-                    )
-                    ->withProviderOptions([
-                        'size' => '1024x1024',
-                        'quality' => 'standard',
-                        'style' => 'vivid',
-                    ])
-                    ->withClientOptions([
-                        'timeout' => $this->timeout,
-                    ])
-                    ->generate();
+                $imageResponse = Image::of(
+                    'Hyper-realistic photograph, '
+                    .'soft light, Canon EOS R5 and 50mm f/1.2 lens, '
+                    .'detailed textures, extremely sharp realism, shallow depth of field. subject: '
+                    .$userPrompt
+                    .'. No text. Not too much details or too many items.'
+                )
+                    ->square()
+                    ->quality('medium')
+                    ->timeout($this->timeout)
+                    ->generate(provider: Lab::OpenAI, model: $this->imageModel);
 
-                $image = $response->firstImage();
-                $imageUrl = $image?->url ?? '';
+                $generatedImage = $imageResponse->firstImage();
+                $imageContent = base64_decode($generatedImage->image);
+                $path = 'posts/'.Str::uuid().'-test.png';
 
-                if ($imageUrl !== '') {
-                    $uploadResult = Cloudinary::uploadApi()->upload($imageUrl, [
-                        'resource_type' => 'image',
-                    ]);
-                } else {
-                    $fileParam = ($image?->base64 ? ('data:image/webp;base64,'.$image->base64) : null);
+                Storage::disk('s3')->put($path, $imageContent);
 
-                    if ($fileParam === null) {
-                        return '';
-                    }
-
-                    $uploadResult = Cloudinary::uploadApi()->upload($fileParam, [
-                        'resource_type' => 'image',
-                    ]);
-                }
-
-                $imageGenerationUsage = ai_save_usage($this->userId, 'dall-e-3', 0, 1);
+                $imageGenerationUsage = ai_save_usage($this->userId, $this->imageModel, 0, 1);
                 $usageIds[] = $imageGenerationUsage->id;
 
-                return $uploadResult['secure_url'] ?? '';
+                return Storage::disk('s3')->url($path);
             } catch (\Throwable $e) {
-                if ($attempt < $maxAttempts) {
-                    Log::warning("Image generation failed (attempt {$attempt}/{$maxAttempts}): ".$e->getMessage().' Retrying...');
+                if ($attempt < $this->maxAttempts) {
+                    Log::warning("Image generation failed (attempt {$attempt}/{$this->maxAttempts}): ".$e->getMessage().' Retrying...');
                     sleep(min($attempt * 2, 4));
                 } else {
-                    Log::error("Image generation failed after {$maxAttempts} attempts: ".$e->getMessage());
+                    Log::error("Image generation failed after {$this->maxAttempts} attempts: ".$e->getMessage());
                 }
             }
         }

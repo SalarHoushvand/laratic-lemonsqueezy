@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
+use Laravel\Ai\Enums\Lab;
 use Livewire\Component;
-use Prism\Prism\Prism;
+
+use function Laravel\Ai\agent;
 
 class AiSimple extends Component
 {
@@ -15,11 +17,9 @@ class AiSimple extends Component
     public function tryRequest(): void
     {
         try {
-            $response = Prism::text()
-                ->using('openai', $this->model)
-                ->withSystemPrompt('You are an expert Laravel developer who explains concepts simply.')
-                ->withPrompt($this->prompt)
-                ->asText();
+            $response = agent(
+                instructions: 'You are an expert Laravel developer who explains concepts simply.',
+            )->prompt($this->prompt, provider: Lab::OpenAI, model: $this->model);
 
             $promptTokens = (int) $response->usage->promptTokens;
             $outputTokens = (int) $response->usage->completionTokens;

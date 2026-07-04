@@ -1,7 +1,7 @@
 @push('head')
     <title>AI Integration - Simple - {{ config('app.name') }}</title>
     <meta name="description"
-        content="Learn how to call an AI model using Prism and capture token usage in {{ config('app.name') }}.">
+        content="Learn how to call an AI model using the Laravel AI SDK and capture token usage in {{ config('app.name') }}.">
 @endpush
 
 <x-layouts.docs :breadcrumbs="[
@@ -16,17 +16,14 @@
         the browser.</p>
 
     <h2>Response Handling</h2>
-    <p>The component will send a request to the OpenAI API and dump the response to the browser using Prism's provided
-        methods. </p>
-    <p>You can use system prompts to guide the AI model to behave in a certain way. For example, you can use a system
-        prompt to tell the AI model to <i>behave like a Laravel developer who explains concepts simply</i>.</p>
+    <p>The component will send a request to the OpenAI API and dump the response to the browser using the Laravel AI SDK. </p>
+    <p>You can use instructions to guide the AI model to behave in a certain way. For example, you can tell the AI model to <i>behave like a Laravel developer who explains concepts simply</i>.</p>
 
-    <pre><code class="language-php">$response = Prism::text()
-    ->using('openai', $this->model)
-    // Adjust this as needed to guide the AI model to behave in a certain way.
-    ->withSystemPrompt('You are an expert Laravel developer who explains concepts simply.')
-    ->withPrompt($this->prompt)
-    ->asText();
+    <pre><code class="language-php">use function Laravel\Ai\agent;
+
+$response = agent(
+    instructions: 'You are an expert Laravel developer who explains concepts simply.',
+)->prompt($this->prompt, model: $this->model);
 </code></pre>
 
 

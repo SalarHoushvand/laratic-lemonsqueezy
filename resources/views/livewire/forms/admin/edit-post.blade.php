@@ -58,8 +58,7 @@
                 <div x-show="tab === 'cover'" x-cloak id="tabpanel-cover" class="space-y-6" role="tabpanel"
                     aria-label="cover">
                     <div class="space-y-3">
-                        <x-input-file label="{{ __('Upload Cover Image') }}" target="image_url" :component-id="$this->getId()"
-                            name="image_url" :error="$errors->has('image_url')" :error-message="$errors->get('image_url')" />
+                        <x-input-file wire:model="uploadedImage" label="{{ __('Upload Cover Image') }}" :error="$errors->has('uploadedImage')" :error-message="$errors->get('uploadedImage')" />
                         <x-input-label for="image_url" :value="__('Image URL')" />
                         <x-input wire:model.blur="image_url" id="image_url" class="mt-1 block w-full"
                             placeholder="https://..." />
@@ -79,7 +78,7 @@
                                 </div>
                             @else
                                 <div class="text-sm text-on-surface dark:text-on-surface-dark">
-                                    {{ __('Upload an image with Cloudinary') }}
+                                    {{ __('Upload an image or paste a URL above') }}
                                 </div>
                                 <div class="mt-2 text-xs text-on-surface/70 dark:text-on-surface-dark/70">
                                     {{ __('Or paste an image URL in the input above') }}

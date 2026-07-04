@@ -3,9 +3,11 @@
 namespace App\Livewire\Forms\Admin;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 /**
  * Livewire component for editing user information.
@@ -16,16 +18,24 @@ use Livewire\Component;
  */
 class EditUser extends Component
 {
+    use WithFileUploads;
+
     /**
      * The user instance being edited.
      */
     public User $user;
 
     /**
-     * The avatar URL from Cloudinary.
+     * The avatar URL stored in S3.
      */
     #[Validate('nullable|string|url')]
     public ?string $avatar = null;
+
+    /**
+     * Temporary file upload for avatar.
+     */
+    #[Validate('nullable|image|max:2048')]
+    public $uploadedAvatar = null;
 
     /**
      * The user's full name.
@@ -130,6 +140,23 @@ class EditUser extends Component
             title: __('User Updated'),
             message: __('User information has been updated successfully!')
         );
+    }
+
+    /**
+     * Handle avatar file upload: store to S3 and update the user record.
+     */
+    public function updatedUploadedAvatar(): void
+    {
+        $this->validateOnly('uploadedAvatar');
+
+        $path = $this->uploadedAvatar->store('avatars', 's3');
+        $url = Storage::disk('s3')->url($path);
+
+        $this->user->update(['avatar' => $url]);
+        $this->avatar = $url;
+        $this->uploadedAvatar = null;
+
+        $this->dispatch('notify', variant: 'success', title: __('Avatar updated'), message: __('The avatar has been updated successfully'));
     }
 
     /**

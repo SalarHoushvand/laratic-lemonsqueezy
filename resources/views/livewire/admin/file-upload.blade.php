@@ -2,7 +2,7 @@
     <title>{{ __('Upload File') }}</title>
 @endpush
 <div class="flex flex-col gap-6">
-    <x-typography.admin-page-header :title="__('Upload File')" :description="__('Upload files to Cloudinary and get a shareable URL instantly.')" />
+    <x-typography.admin-page-header :title="__('Upload File')" :description="__('Upload files to AWS S3 and get a shareable URL instantly.')" />
 
     <div class="flex flex-col gap-6 lg:grid lg:grid-cols-12">
         {{-- Main Upload Area --}}
@@ -15,15 +15,14 @@
                             {{ __('Upload File') }}
                         </h2>
                         <p class="text-sm text-on-surface-muted dark:text-on-surface-dark-muted mt-1">
-                            {{ __('Select a file to upload to Cloudinary') }}
+                            {{ __('Select a file to upload to S3') }}
                         </p>
                     </div>
                 </div>
 
                 <x-input-file
+                    wire:model="uploadedFile"
                     label="{{ __('Choose a file to upload') }}"
-                    target="fileUrl"
-                    :component-id="$this->getId()"
                 />
 
                 @if ($fileUrl)
@@ -125,7 +124,7 @@
                     </div>
                     <div class="space-y-3 text-sm text-on-surface dark:text-on-surface-dark">
                         <p>
-                            {{ __('Files are uploaded to Cloudinary, a cloud-based media management platform.') }}
+                            {{ __('Files are uploaded to AWS S3, a reliable cloud storage service.') }}
                         </p>
                         <div>
                             <p class="font-medium text-on-surface-strong dark:text-on-surface-dark-strong mb-2">

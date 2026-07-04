@@ -11,7 +11,6 @@
         'github' => ['name' => 'GitHub', 'url' => 'https://github.com'],
         'google' => ['name' => 'Google', 'url' => 'https://cloud.google.com'],
         'open-ai' => ['name' => 'OpenAI', 'url' => 'https://openai.com'],
-        'cloudinary' => ['name' => 'Cloudinary', 'url' => 'https://cloudinary.com'],
         'mailgun' => ['name' => 'Mailgun', 'url' => 'https://www.mailgun.com'],
         'mailchimp' => ['name' => 'Mailchimp', 'url' => 'https://mailchimp.com'],
         'lemon-squeezy' => ['name' => 'Lemon Squeezy', 'url' => 'https://www.lemonsqueezy.com'],

@@ -9,7 +9,7 @@
 
         <div class="mb-6">
             <div class="flex items-center gap-4 w-fit">
-                <x-input-file name="avatar" target="avatar" :componentId="$this->getId()" :errorMessage="$errors->get('avatar')">
+                <x-input-file wire:model="uploadedAvatar" :errorMessage="$errors->get('uploadedAvatar')">
                     <div class="group relative inline-block cursor-pointer">
                         <x-avatar :img="$avatar ?: $user->avatar" :name="$user->name" size="xl"/>
                         <div

@@ -8,7 +8,7 @@
         <!-- Avatar Field -->
         <div class="flex flex-col gap-1">
             <div class="flex items-center gap-4 w-fit">
-                <x-input-file name="avatar" target="avatar" :componentId="$this->getId()" :errorMessage="$errors->get('avatar')">
+                <x-input-file wire:model="uploadedAvatar" :errorMessage="$errors->get('uploadedAvatar')">
                     <div class="group relative inline-block cursor-pointer">
                         <x-avatar :img="$avatar ?: auth()->user()->avatar" :fallback="auth()->user()->initials() ?? 'Unknown'" size="xl" />
                         <div

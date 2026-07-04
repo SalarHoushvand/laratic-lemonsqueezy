@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Throwable;
 
 /**
@@ -22,6 +24,8 @@ use Throwable;
  */
 class EditPost extends Component
 {
+    use WithFileUploads;
+
     /**
      * The post being edited.
      */
@@ -44,6 +48,12 @@ class EditPost extends Component
      */
     #[Validate('nullable')]
     public string $image_url = '';
+
+    /**
+     * Temporary file upload for cover image.
+     */
+    #[Validate('nullable|image|max:5120')]
+    public $uploadedImage = null;
 
     /**
      * The author name for the post.
@@ -146,6 +156,21 @@ class EditPost extends Component
 
             $this->dispatch('notify', variant: 'danger', title: __('Post Update Failed'), message: __('Unable to save your changes. Please try again.'));
         }
+    }
+
+    /**
+     * Handle cover image file upload: store to S3 and auto-save to the post.
+     */
+    public function updatedUploadedImage(): void
+    {
+        $this->validateOnly('uploadedImage');
+
+        $path = $this->uploadedImage->store('posts', 's3');
+        $this->image_url = Storage::disk('s3')->url($path);
+        $this->uploadedImage = null;
+
+        $this->post->update(['image_url' => $this->image_url]);
+        $this->dispatch('notify', variant: 'success', title: __('Image saved'), message: __('The cover image has been updated.'));
     }
 
     /**

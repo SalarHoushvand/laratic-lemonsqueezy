@@ -8,9 +8,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Throwable;
 
 /**
@@ -18,6 +20,8 @@ use Throwable;
  */
 class CreatePost extends Component
 {
+    use WithFileUploads;
+
     /**
      * User-provided prompt for AI content generation.
      */
@@ -63,6 +67,12 @@ class CreatePost extends Component
     public string $image_url = '';
 
     /**
+     * Temporary file upload for cover image.
+     */
+    #[Validate('nullable|image|max:5120')]
+    public $uploadedImage = null;
+
+    /**
      * The author name for the post.
      */
     #[Validate('nullable|string|max:255')]
@@ -85,6 +95,18 @@ class CreatePost extends Component
      */
     #[Validate('boolean')]
     public bool $is_promoted = false;
+
+    /**
+     * Handle cover image file upload: store to S3 and populate the image URL field.
+     */
+    public function updatedUploadedImage(): void
+    {
+        $this->validateOnly('uploadedImage');
+
+        $path = $this->uploadedImage->store('posts', 's3');
+        $this->image_url = Storage::disk('s3')->url($path);
+        $this->uploadedImage = null;
+    }
 
     /**
      * Initialize the component and set default author name.

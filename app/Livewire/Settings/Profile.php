@@ -5,16 +5,27 @@ namespace App\Livewire\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Profile extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
 
     public string $email = '';
 
     public ?string $avatar = null;
+
+    /**
+     * Temporary file upload for avatar.
+     */
+    #[Validate('nullable|image|max:2048')]
+    public $uploadedAvatar = null;
 
     /**
      * Mount the component.
@@ -70,6 +81,26 @@ class Profile extends Component
             title: __('Profile updated'),
             message: __('Your profile has been updated successfully')
         );
+    }
+
+    /**
+     * Handle avatar file upload: store to S3 and update the user record.
+     */
+    public function updatedUploadedAvatar(): void
+    {
+        $this->validateOnly('uploadedAvatar');
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $path = $this->uploadedAvatar->store('avatars', 's3');
+        $url = Storage::disk('s3')->url($path);
+
+        $user->update(['avatar' => $url]);
+        $this->avatar = $url;
+        $this->uploadedAvatar = null;
+
+        $this->dispatch('notify', variant: 'success', title: __('Avatar updated'), message: __('Your avatar has been updated successfully'));
     }
 
     /**

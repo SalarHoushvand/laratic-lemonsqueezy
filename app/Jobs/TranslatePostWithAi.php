@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Ai\Agents\TranslationAgent;
 use App\Models\Post;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,10 +11,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Prism\Prism\Enums\Provider;
-use Prism\Prism\Prism;
-use Prism\Prism\Schema\ObjectSchema;
-use Prism\Prism\Schema\StringSchema;
+use Laravel\Ai\Enums\Lab;
+use Laravel\Ai\Responses\StructuredAgentResponse;
 use RuntimeException;
 
 /**
@@ -72,58 +71,30 @@ class TranslatePostWithAi implements ShouldQueue
             $targetLanguageName = (isset($languages[$this->targetLanguage]) ? $languages[$this->targetLanguage]['name'] : null) ?? $this->targetLanguage;
             $sourceLanguageName = (isset($languages[$this->sourcePost->language]) ? $languages[$this->sourcePost->language]['name'] : null) ?? $this->sourcePost->language;
 
-            $schema = new ObjectSchema(
-                name: 'translated_post',
-                description: 'A translated blog post payload',
-                properties: [
-                    new StringSchema('title', 'Translated H1 title for the blog post'),
-                    new StringSchema('description', 'Translated 1-2 sentence summary/teaser for the post, should be 200 characters or less'),
-                    new StringSchema('content', 'Full translated post body in GitHub-flavored well styled Markdown'),
-                ],
-                requiredFields: ['title', 'description', 'content']
+            $userPrompt = "Translate the following blog post from {$sourceLanguageName} to {$targetLanguageName}:\n\n"
+                ."Title: {$this->sourcePost->title}\n\n"
+                ."Description: {$this->sourcePost->description}\n\n"
+                ."Content:\n{$this->sourcePost->content}\n\n"
+                .'Provide a complete translation maintaining all formatting and structure.';
+
+            $response = (new TranslationAgent)->prompt(
+                $userPrompt,
+                provider: Lab::OpenAI,
+                model: $this->model,
+                timeout: $this->timeout
             );
 
-            $systemPrompt = "You are a professional translator specializing in blog post translation. Your task is to translate blog posts accurately while maintaining:\n".
-                "- The original meaning and tone\n".
-                "- The structure and formatting (headings, lists, code blocks)\n".
-                "- The author's voice and style\n".
-                "- Technical accuracy for any code examples or technical terms\n".
-                "- Preserve all Markdown formatting (H2/H3 headings, lists, code blocks, etc.)\n";
+            assert($response instanceof StructuredAgentResponse);
 
-            $userPrompt = "Translate the following blog post from {$sourceLanguageName} to {$targetLanguageName}:\n\n".
-                "Title: {$this->sourcePost->title}\n\n".
-                "Description: {$this->sourcePost->description}\n\n".
-                "Content:\n{$this->sourcePost->content}\n\n".
-                'Provide a complete translation maintaining all formatting and structure.';
-
-            $response = Prism::structured()
-                ->using(Provider::OpenAI, $this->model)
-                ->withSchema($schema)
-                ->withSystemPrompt($systemPrompt)
-                ->withPrompt($userPrompt)
-                ->withProviderOptions([
-                    'schema' => ['strict' => true],
-                ])
-                ->withClientOptions([
-                    'timeout' => $this->timeout,
-                ])
-                ->asStructured();
-
-            if ($response->structured === null) {
-                throw new RuntimeException('AI did not return structured data. Please try again.');
-            }
-
-            $data = $response->structured;
-
-            if (! isset($data['title'], $data['description'], $data['content'])) {
+            if (! isset($response['title'], $response['description'], $response['content'])) {
                 throw new RuntimeException('Structured response missing required fields.');
             }
 
             $translatedPost = Post::create([
                 'reference_number' => $this->sourcePost->reference_number,
-                'title' => (string) $data['title'],
-                'description' => (string) $data['description'],
-                'content' => (string) $data['content'],
+                'title' => (string) $response['title'],
+                'description' => (string) $response['description'],
+                'content' => (string) $response['content'],
                 'image_url' => $this->sourcePost->image_url,
                 'author' => $this->sourcePost->author ?? 'Laratic AI Engine',
                 'language' => $this->targetLanguage,

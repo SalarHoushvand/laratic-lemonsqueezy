@@ -33,7 +33,7 @@
             'role' => 'AI Assistant - OpenAI',
             'avatar' => asset('/images/open-ai-logo.webp'),
             'quote' =>
-                "As ChatGPT, I'm genuinely impressed by how complete Laratic is. It gives you modern auth, social login, Mailgun email, Lemon Squeezy payments, 2FA, roles, multilingual support, AI chat with streaming, and even AI-powered blog generation—all wired together cleanly with Livewire and Penguin UI. With packages like Spatie Permissions, Prism, and Cloudinary already in place, it's a rock-solid foundation for launching a real SaaS fast.",
+                "As ChatGPT, I'm genuinely impressed by how complete Laratic is. It gives you modern auth, social login, Mailgun email, Lemon Squeezy payments, 2FA, roles, multilingual support, AI chat with streaming, and even AI-powered blog generation—all wired together cleanly with Livewire and Penguin UI. With packages like Spatie Permissions, the Laravel AI SDK, and Cloudinary already in place, it's a rock-solid foundation for launching a real SaaS fast.",
         ],
         [
             'name' => 'DeepSeek',

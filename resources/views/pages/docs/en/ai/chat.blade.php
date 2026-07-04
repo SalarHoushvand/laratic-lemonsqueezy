@@ -1,6 +1,6 @@
 @push('head')
     <title>AI Integration - Chat (Streaming) - {{ config('app.name') }}</title>
-    <meta name="description" content="Learn how streaming AI chat works with Livewire and a queued job using Prism.">
+    <meta name="description" content="Learn how streaming AI chat works with Livewire and a queued job using the Laravel AI SDK.">
 @endpush
 
 
@@ -22,7 +22,7 @@
         <li>The Livewire component (<code>App\\Livewire\\AiChat</code>) processes the prompt, creates the message
             history, prepares it for the API, and dispatches the streaming job.</li>
         <li>A background job (<code>App\\Jobs\\StreamAiReply</code>) is created and queued. It sends the request to
-            OpenAI using Prism and saves the response chunks in cache as they arrive.</li>
+            OpenAI using the Laravel AI SDK and saves the response chunks in cache as they arrive.</li>
         <li>The Livewire component polls the cache every 250ms using <code>wire:poll</code> to get the updated buffer,
             enabling real-time streaming in the UI.</li>
         <li>Once generation completes, the AI helper calculates and saves the usage data (tokens, model, user ID) for
