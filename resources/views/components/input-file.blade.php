@@ -13,6 +13,7 @@
     x-on:livewire-upload-start="uploading = true"
     x-on:livewire-upload-finish="uploading = false"
     x-on:livewire-upload-error="uploading = false"
+    x-on:livewire-upload-cancel="uploading = false"
     class="relative flex w-full flex-col gap-1 text-on-surface dark:text-on-surface-dark"
 >
     <label for="{{ $inputId }}" class="cursor-pointer">

@@ -31,9 +31,34 @@ class FileUpload extends Component
     {
         $this->validateOnly('uploadedFile');
 
-        $path = $this->uploadedFile->store('uploads', 's3');
-        $this->fileUrl = Storage::disk('s3')->url($path);
-        $this->uploadedFile = null;
+        if ($this->uploadedFile === null) {
+            return;
+        }
+
+        try {
+            $path = $this->uploadedFile->store('uploads', 's3');
+            $this->fileUrl = Storage::disk('s3')->url($path);
+
+            $this->dispatch(
+                'notify',
+                variant: 'success',
+                title: __('Upload successful'),
+                message: __('Your file has been uploaded to S3.')
+            );
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            $this->addError('uploadedFile', __('The file could not be uploaded. Please try again.'));
+
+            $this->dispatch(
+                'notify',
+                variant: 'error',
+                title: __('Upload failed'),
+                message: __('The file could not be uploaded. Please try again.')
+            );
+        } finally {
+            $this->uploadedFile = null;
+        }
     }
 
     /**

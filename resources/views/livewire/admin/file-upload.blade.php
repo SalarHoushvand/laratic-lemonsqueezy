@@ -22,7 +22,9 @@
 
                 <x-input-file
                     wire:model="uploadedFile"
+                    name="uploadedFile"
                     label="{{ __('Choose a file to upload') }}"
+                    :error-message="$errors->get('uploadedFile')"
                 />
 
                 @if ($fileUrl)
