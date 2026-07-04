@@ -303,7 +303,7 @@
                     <span class="text-primary dark:text-primary-dark">{{ __('Payment') }}</span> {{ __('System') }}
                 </h3>
                 <p class=" text-on-surface-muted dark:text-on-surface-dark-muted text-sm text-pretty">
-                    {{ __('Support subscriptions and one-time purchases with the built-in Paddle payment system.') }}
+                    {{ __('Support subscriptions and one-time purchases with the built-in LemonSqueezy payment system.') }}
                 </p>
             </div>
             <div class="relative">

@@ -22,8 +22,8 @@
 **{{ __('Invoice Number') }}:** {{ $order->invoice_number }}
 @endif
 
-@if($order->paddle_id)
-**{{ __('Paddle Transaction ID') }}:** {{ $order->paddle_id }}
+@if($order->lemon_squeezy_id)
+**{{ __('Lemon Squeezy Order ID') }}:** {{ $order->lemon_squeezy_id }}
 @endif
 
 **{{ __('Payment Date') }}:** {{ $order->paid_at?->format('F j, Y \a\t g:i A') }}

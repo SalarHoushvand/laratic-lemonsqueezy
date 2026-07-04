@@ -13,7 +13,7 @@
             <tr>
                 <td class="p-4">{{ $transaction->billed_at->toFormattedDateString() }}</td>
                 <td class="p-4">
-                    {{ $transaction->paddle_subscription_id ? __('Subscription') : __('Order') }}
+                    {{ $transaction->subscription_id ? __('Subscription') : __('Order') }}
                 </td>
                 <td class="p-4 font-mono">{{ $transaction->total() }}</td>
                 <td class="p-4 font-mono">{{ $transaction->tax() }}</td>

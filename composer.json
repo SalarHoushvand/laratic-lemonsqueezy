@@ -12,6 +12,13 @@
         "open-source"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Salar Houshvand",
+            "homepage": "https://github.com/SalarHoushvand"
+        }
+    ],
+    "homepage": "https://www.laratickit.com",
     "require": {
         "php": "^8.2",
         "ext-intl": "*",

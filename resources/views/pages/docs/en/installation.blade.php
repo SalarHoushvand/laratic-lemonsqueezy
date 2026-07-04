@@ -9,8 +9,10 @@
     <h1>Installation</h1>
     <p>Follow these steps to install Laratic on your system.</p>
 
-    <h2>1. Extract the Archive</h2>
-    <p>Once you download the Laratic zip file, extract it and navigate into the folder, you can rename the folder to anything you want.</p>
+    <h2>1. Clone the Repository</h2>
+    <p>Clone the repository and navigate into the project folder. You can rename the folder to anything you want.</p>
+    <pre><code class="language-bash">git clone https://github.com/SalarHoushvand/laratic-lemonsqueezy.git
+cd laratic-lemonsqueezy</code></pre>
 
     <h2>2. Install PHP Dependencies</h2>
     <p>Install all required PHP packages using Composer:</p>

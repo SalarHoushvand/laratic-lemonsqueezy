@@ -36,7 +36,7 @@
     </ul>
 
     <h2>What You Get</h2>
-    <p>When you purchase {{ config('app.name') }}, you receive a ZIP file containing the entire codebase. Once you download the ZIP file, the code is yours. Similar to Laravel's official starter kits, you can modify, extend, and customize everything to fit your specific needs. You're free to add, remove, or update dependencies as your project evolves.</p>
+    <p>{{ config('app.name') }} is free and open source under the MIT license. Clone the repository from GitHub to get the full codebase. Similar to Laravel's official starter kits, you can modify, extend, and customize everything to fit your specific needs. You're free to add, remove, or update dependencies as your project evolves.</p>
 
 
     <h2>Tech Stack</h2>

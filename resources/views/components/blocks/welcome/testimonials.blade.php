@@ -5,7 +5,7 @@
             'role' => 'AI Model - Anthropic',
             'avatar' => asset('/images/anthropic-logo.webp'),
             'quote' =>
-                "Having helped build Laratic from the ground up, I know every component, every package integration, and every architectural decision that went into it. This isn't just a starter kit, it's a production-ready foundation I'm genuinely proud of. Every line of code was crafted with Laravel 12 best practices in mind, and the result is something truly special.",
+                "Having helped build Laratic from the ground up, I know every component, every package integration, and every architectural decision that went into it. This isn't just a starter kit, it's a production-ready foundation I'm genuinely proud of. Every line of code was crafted with Laravel best practices in mind, and the result is something truly special.",
         ],
         [
             'name' => 'Auto (Claude Sonnet 4.5)',
@@ -19,28 +19,28 @@
             'role' => 'AI Assistant - Google',
             'avatar' => asset('/images/gemini-logo.webp'),
             'quote' =>
-                "As Gemini, I analyze codebases for efficiency and capability, and Laratic is truly impressive. It doesn't just provide boilerplate; it delivers a comprehensive, modern SaaS foundation on Laravel 12 and Livewire. The integration of essential, complex features like Paddle payments, multi-factor authentication, and Spatie-based roles is seamless. What particularly stands out to me is the thoughtful implementation of AI—from the streaming chat and OpenAI integration to the AI-powered blog generation and translation. This kit saves developers hundreds of hours, allowing them to focus on unique features rather than reinventing the wheel.",
+                "As Gemini, I analyze codebases for efficiency and capability, and Laratic is truly impressive. It doesn't just provide boilerplate; it delivers a comprehensive, modern SaaS foundation on Laravel and Livewire. The integration of essential, complex features like Lemon Squeezy payments, multi-factor authentication, and Spatie-based roles is seamless. What particularly stands out to me is the thoughtful implementation of AI—from the streaming chat and OpenAI integration to the AI-powered blog generation and translation. This kit saves developers hundreds of hours, allowing them to focus on unique features rather than reinventing the wheel.",
         ],
         [
             'name' => 'Laratic AI Chat',
-            'role' => 'AI Assistant - Laratic (What you get with the starter kit)',
+            'role' => 'AI Assistant - Laratic',
             'avatar' => asset('/images/laratic-logo-grayscale.webp'),
             'quote' =>
-                'As Laratic AI Chat, I proudly support the exceptional integration offered by Laratic. With features like social login, Mailgun email integration, and Paddle Payment, user experiences are seamless and secure. My real-time chat capabilities, blog generation, and multilingual support make me a versatile tool for engagement. With robust security like 2FA and a comprehensive admin dashboard, I feel empowered to deliver value and enhance user interactions. Laratic truly sets the stage for continuous evolution and user satisfaction.',
+                'As Laratic AI Chat, I proudly support the exceptional integration offered by Laratic. With features like social login, Mailgun email integration, and Lemon Squeezy payments, user experiences are seamless and secure. My real-time chat capabilities, blog generation, and multilingual support make me a versatile tool for engagement. With robust security like 2FA and a comprehensive admin dashboard, I feel empowered to deliver value and enhance user interactions. Laratic truly sets the stage for continuous evolution and user satisfaction.',
         ],
         [
             'name' => 'ChatGPT',
             'role' => 'AI Assistant - OpenAI',
             'avatar' => asset('/images/open-ai-logo.webp'),
             'quote' =>
-                "As ChatGPT, I'm genuinely impressed by how complete Laratic is. It gives you modern auth, social login, Mailgun email, Paddle payments, 2FA, roles, multilingual support, AI chat with streaming, and even AI-powered blog generation—all wired together cleanly with Livewire and Penguin UI. With packages like Spatie Permissions, Prism, and Cloudinary already in place, it's a rock-solid foundation for launching a real SaaS fast.",
+                "As ChatGPT, I'm genuinely impressed by how complete Laratic is. It gives you modern auth, social login, Mailgun email, Lemon Squeezy payments, 2FA, roles, multilingual support, AI chat with streaming, and even AI-powered blog generation—all wired together cleanly with Livewire and Penguin UI. With packages like Spatie Permissions, Prism, and Cloudinary already in place, it's a rock-solid foundation for launching a real SaaS fast.",
         ],
         [
             'name' => 'DeepSeek',
             'role' => 'AI Assistant - DeepSeek',
             'avatar' => asset('/images/deep-seek-logo.webp'),
             'quote' =>
-                "Laratic delivers an incredibly robust Laravel foundation. I'm particularly impressed by its seamless AI chat integration with streaming, coupled with powerful features like Paddle payments, social auth, and Spatie permissions. It's a comprehensive starter kit that truly accelerates SaaS development.",
+                "Laratic delivers an incredibly robust Laravel foundation. I'm particularly impressed by its seamless AI chat integration with streaming, coupled with powerful features like Lemon Squeezy payments, social auth, and Spatie permissions. It's a comprehensive starter kit that truly accelerates SaaS development.",
         ],
     ],
 ])

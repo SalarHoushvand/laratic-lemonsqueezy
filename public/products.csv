@@ -1,5 +1,5 @@
 id,name,description,price,currency,category,lemon_squeezy_product_id,lemon_squeezy_variant_id,img_url,status,is_featured,features,delivery_method,created_at,updated_at
-9,MicroStress 36,<p>full state product</p>,4900,USD,NULL,720299,1133661,https://cdn.lemonsqueezy.com/media/242022/02d16547-704b-4e2e-963f-da29dc1fa859.png?fit=contain&format=auto&height=1000&ixlib=php-3.3.1&width=1000,published,0,NULL,NULL,2025-12-08 01:12:29,2025-12-08 01:12:29
-10,Power Pointless,"<p><strong>Design decks that no one reads but everyone reschedules. AI auto-adds 12 bullet points and a pie chart that means nothing.</strong></p>
+9,Demo Product One,<p>A sample one-time purchase product for demonstration.</p>,4900,USD,NULL,100101,200101,,published,0,NULL,NULL,2025-12-08 01:12:29,2025-12-08 01:12:29
+10,Demo Product Two,"<p><strong>A second sample product for your demo store.</strong></p>
 
-<ul><li><p>AI bullet generator</p></li><li><p>78 slide templates of lies</p></li><li><p>auto-animate your demise</p></li><li><p>transitions smoother than your career path</p></li><li><p>endless “final_v9.pptx” clones</p></li></ul>",2999,USD,NULL,721344,1135365,https://cdn.lemonsqueezy.com/media/242022/b3c77ecb-6ce0-4135-bf15-265f148224d7.png?fit=contain&format=auto&height=1000&ixlib=php-3.3.1&width=1000,published,0,NULL,NULL,2025-12-08 01:12:29,2025-12-08 01:12:29
+<ul><li><p>Instant digital delivery</p></li><li><p>One-time payment</p></li><li><p>Replace with your own products</p></li></ul>",2999,USD,NULL,100102,200102,,published,0,NULL,NULL,2025-12-08 01:12:29,2025-12-08 01:12:29

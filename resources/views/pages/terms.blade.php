@@ -58,9 +58,9 @@
 
                 <!-- Payment Terms -->
                 <section class="pt-8">
-                    <h2 class="heading-4 mb-4 text-on-surface-strong dark:text-on-surface-dark">Payment Terms</h2>
+                    <h2 class="heading-4 mb-4 text-on-surface-strong dark:text-on-surface-dark">Subscriptions and Payments</h2>
                     <p class="text-sm text-on-surface-muted dark:text-on-surface-dark-muted leading-relaxed">
-                        If you choose to purchase any paid services, you agree to pay all fees in accordance with the pricing and payment terms presented to you. All payments are non-refundable unless otherwise specified. We reserve the right to modify our pricing with reasonable notice. Continued use of our services after a price change constitutes acceptance of the new pricing.
+                        If you subscribe to any paid plans or purchase products through our platform, you agree to pay all fees in accordance with the pricing and payment terms presented to you. Refund policies, if any, are described at the time of purchase. We reserve the right to modify our pricing with reasonable notice. Continued use of our services after a price change constitutes acceptance of the new pricing.
                     </p>
                 </section>
 

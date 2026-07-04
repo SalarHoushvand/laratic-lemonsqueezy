@@ -1,17 +1,8 @@
 # Laratic (Lemon Squeezy)
 
-Laratic is a Laravel 12 + Livewire SaaS starter kit with **Lemon Squeezy** billing, authentication, admin dashboard, AI features, blog, and more.
+Laratic is a Laravel + Livewire SaaS starter kit with **Lemon Squeezy** billing, authentication, admin dashboard, AI features, blog, and more.
 
 Licensed under the [MIT License](LICENSE).
-
-## Documentation
-
-Full documentation: [https://laratic.com/docs/installation](https://laratic.com/docs/installation)
-
-Other variants:
-
-- [Laratic Paddle](https://github.com/SalarHoushvand/laratic-paddle)
-- [Laratic Stripe](https://github.com/SalarHoushvand/laratic-stripe)
 
 ## Requirements
 
@@ -34,7 +25,22 @@ php artisan storage:link
 composer run dev
 ```
 
-Then configure your `.env` file for mail, Lemon Squeezy, OpenAI, and other services. See the [documentation](https://laratic.com/docs/installation) for details.
+Configure your `.env` file for mail, Lemon Squeezy, OpenAI, and other services.
+
+Default seeded admin (local dev only): `admin@email.com` / `password`
+
+## Documentation
+
+Full documentation: [https://www.laratickit.com](https://www.laratickit.com)
+
+Other variants:
+
+- [Laratic Paddle](https://github.com/SalarHoushvand/laratic-paddle)
+- [Laratic Stripe](https://github.com/SalarHoushvand/laratic-stripe)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
