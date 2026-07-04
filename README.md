@@ -15,17 +15,10 @@ A Laravel + Livewire SaaS starter kit with **Lemon Squeezy** billing built in. S
 
 ## Tech stack
 
-- Laravel 13
-- Livewire 4
-- Tailwind CSS 4
-- Pest
-
-## Requirements
-
-- PHP 8.3+
-- Composer
-- Node.js 18+
-- SQLite, MySQL, or PostgreSQL
+- Laravel
+- Livewire
+- Tailwind CSS
+- Alpine JS
 
 ## Getting started
 
@@ -65,18 +58,3 @@ composer run dev
 
 This starts the app server, queue worker, log tail, and Vite dev server together.
 
-### Default admin account
-
-After seeding (local development only):
-
-| Email | Password |
-| --- | --- |
-| `admin@email.com` | `password` |
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## License
-
-This project is open-source software licensed under the [MIT License](LICENSE).
